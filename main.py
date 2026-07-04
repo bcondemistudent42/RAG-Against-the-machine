@@ -1,0 +1,37 @@
+from dataclasses import dataclass
+from pathlib import Path
+from langchain_core.documents import Document
+
+@dataclass
+class Raw_data:
+    py: list[Document]
+    md: list[Document]
+    txt: list[Document]
+
+class Loader:
+    def __init__(self, folder_name: str):
+        self.folder_path = Path(folder_name)
+
+    def _load_extension(self, ext: str) -> list[Document]:
+        docs = []
+        for file_path in self.folder_path.rglob(f"*.{ext}"):
+            try:
+                content = file_path.read_text(encoding="utf-8")
+                docs.append(Document(page_content=content, metadata={"source": str(file_path)}))
+            except Exception as e:
+                print(f"Erreur de lecture pour {file_path} : {e}")
+        return docs
+
+    def load_all(self) -> Raw_data:
+        py = self._load_extension("py")
+        md = self._load_extension("md")
+        txt = self._load_extension("txt")
+        return Raw_data(py, md, txt)
+
+def main():
+    load = Loader("vllm-0.10.1")
+    data = load.load_all()
+    print(f"Loaded : {len(data.py)} .py, {len(data.md)} .md, {len(data.txt)} .txt")
+
+if __name__ == "__main__":
+    main()
