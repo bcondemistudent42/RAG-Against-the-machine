@@ -28,10 +28,5 @@ class Loader:
         txt = self._load_extension("txt")
         return Raw_data(py, md, txt)
 
-def main():
-    load = Loader("vllm-0.10.1")
-    data = load.load_all()
-    print(f"Loaded : {len(data.py)} .py, {len(data.md)} .md, {len(data.txt)} .txt")
-
-if __name__ == "__main__":
-    main()
+# to do chunking with textsplitter
+# recursive character text splitter
