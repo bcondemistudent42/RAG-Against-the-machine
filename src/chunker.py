@@ -1,35 +1,52 @@
+from loader import Raw_data
 from my_enum import FileType
 from dataclasses import dataclass
 from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter, Language
 
 
 @dataclass
-class Clean_data:
-    py: list[str]
-    md: list[str]
-    txt: list[str]
+class Chunked_data:
+    py: list[Document]
+    md: list[Document]
+    txt: list[Document]
 
 
 class Chunker():
-    def __init__(self, raw_data):
+    def __init__(self, raw_data: Raw_data):
         self.raw_data = raw_data
 
-    @staticmethod
-    def splitter(typed_data: Document, type: FileType):
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=0)
-        chunk = text_splitter.split_text(str(typed_data))
+    def splitter(self, typed_data: Document, doc_type: FileType):
+        if doc_type == FileType.PY:
+            multi_splitter = RecursiveCharacterTextSplitter.from_language(
+                chunk_size=2000,
+                chunk_overlap=100,
+                language=Language.PYTHON
+            )
+        elif doc_type == FileType.MD:
+            multi_splitter = RecursiveCharacterTextSplitter.from_language(
+                chunk_size=2000,
+                chunk_overlap=100,
+                language=Language.MARKDOWN
+            )
+        else:
+            multi_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=100)
+
+        chunk = [multi_splitter.split_text(x.page_content) for x in typed_data]
+        return chunk
+
+    def chunk_all(self) -> Chunked_data:
+        output = {}
+        for each_type in FileType:
+            each_type = str(each_type)
+            output[each_type] = self.splitter(getattr(self.raw_data, each_type), each_type)
+        return Chunked_data(**output)
+
+
+
+
         #to filter depending on type
         # for elt in chunks:
             # print("\n_____START CHUNK______")
             # print(f"{elt}")
             # print("_____END CHUNK______\n")
-        return chunk
-
-    def chunk_all(self) -> Clean_data:
-        output = {}
-        for each_type in FileType:
-            each_type = str(each_type)
-            output[each_type] = self.splitter(getattr(self.raw_data, each_type), each_type)
-        return Clean_data(**output)
-

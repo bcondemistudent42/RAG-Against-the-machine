@@ -16,17 +16,19 @@ class Loader:
         docs = []
         for file_path in self.folder_path.rglob(f"*.{ext}"):
             try:
-                content = file_path.read_text(encoding="utf-8")
-                docs.append(Document(page_content=content, metadata={"source": str(file_path)}))
+                content = file_path.read_text()
+                docs.append(
+                    Document(
+                        page_content=content,
+                        metadata={"source": file_path.as_posix()}
+                        )
+                    )
             except Exception as e:
-                print(f"Erreur de lecture pour {file_path} : {e}")
+                print(f"Error while loading file {file_path} : {e}")
         return docs
 
     def load_all(self) -> Raw_data:
-        py = self._load_extension("py")
-        md = self._load_extension("md")
         txt = self._load_extension("txt")
+        md = self._load_extension("md")
+        py = self._load_extension("py")
         return Raw_data(py, md, txt)
-
-# to do chunking with textsplitter
-# recursive character text splitter
