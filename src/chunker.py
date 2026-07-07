@@ -33,14 +33,18 @@ class Chunker():
             multi_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=100)
 
         chunk = [multi_splitter.split_text(x.page_content) for x in typed_data]
-        return chunk
+        metadata_srcs = [x.metadata["source"] for x in typed_data]
+        return (chunk, metadata_srcs)
 
     def chunk_all(self) -> Chunked_data:
         output = {}
+        metadata_srcs = {}
         for each_type in FileType:
             each_type = str(each_type)
-            output[each_type] = self.splitter(getattr(self.raw_data, each_type), each_type)
-        return Chunked_data(**output)
+            output[each_type], temp_meta = self.splitter(getattr(self.raw_data, each_type), each_type)
+            metadata_srcs[each_type] = []
+            metadata_srcs[each_type].append(temp_meta)
+        return (Chunked_data(**output), metadata_srcs)
 
 
 
