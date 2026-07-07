@@ -24,23 +24,27 @@ class Indexer:
         for data_type in FileType:
             data_type = str(data_type)
             output[data_type] = []
-            for each_file in getattr(self.chunked_data, data_type):
-                temp = self._make_metadata_index(each_file, self.all_sources[data_type])
-                output[data_type].append(temp)
+            temp = self._make_metadata_index(getattr(self.chunked_data, data_type), self.all_sources[data_type])
+            output[data_type] = temp
         return (Organised_Metadata(**output))
 
     @staticmethod
     def _make_metadata_index(typed_data: list[list[str]], metadata_typed: list[str]) -> list[MinimalSource]:
         output = []
-        prev_len = 0
+        file = -1
         for chunk in typed_data:
-            actual_len = len(chunk)
-            output.append(
-                MinimalSource(
-                file_path=metadata_typed[0][0],
-                first_character_index=prev_len,
-                last_character_index=prev_len + actual_len
+            prev_len = 0
+            file += 1
+            all_file_metadata = []
+            for each_file in chunk:
+                actual_len = len(each_file)
+                all_file_metadata.append(
+                    MinimalSource(
+                    file_path=metadata_typed[0][file],
+                    first_character_index=prev_len,
+                    last_character_index=prev_len + actual_len
+                    )
                 )
-            )
-            prev_len += actual_len + 1
+                prev_len += actual_len + 1
+            output.append(all_file_metadata)
         return output
