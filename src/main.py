@@ -14,14 +14,18 @@ def visualize_chunk(chunked_data: Chunked_data, data_type: str):
 
 
 def main():
-    # database = "vllm-0.10.1" #to define later
-    database = "bible"
+    database = "vllm-0.10.1" #to define later
+    # database = "bible"
     load = Loader(database)
     raw_data = load.load_all()
     my_chunker = Chunker(raw_data)
     chunked_data, metadata_sources = my_chunker.chunk_all()
     # to do another proper function to call for all file type
-    make_index(chunked_data.txt, metadata_sources["txt"])
+    # print(metadata_sources["txt"][0][0])
+    output = make_index(chunked_data.txt, metadata_sources["txt"])
+    visualize_chunk(chunked_data, "txt")
+    for elt in output:
+        print(elt)
 
 
 if __name__ == "__main__":

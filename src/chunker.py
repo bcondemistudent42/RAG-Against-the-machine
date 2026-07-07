@@ -16,6 +16,8 @@ class Chunker():
     def __init__(self, raw_data: Raw_data):
         self.raw_data = raw_data
 
+        # to -1 to chunk size from user
+
     def splitter(self, typed_data: Document, doc_type: FileType):
         if doc_type == FileType.PY:
             multi_splitter = RecursiveCharacterTextSplitter.from_language(
