@@ -1,6 +1,6 @@
 from loader import Loader
+from indexing import Indexer
 from chunker import Chunker, Chunked_data
-from indexing import make_index
 
 
 def visualize_chunk(chunked_data: Chunked_data, data_type: str):
@@ -16,16 +16,21 @@ def visualize_chunk(chunked_data: Chunked_data, data_type: str):
 def main():
     database = "vllm-0.10.1" #to define later
     # database = "bible"
+
     load = Loader(database)
     raw_data = load.load_all()
+
     my_chunker = Chunker(raw_data)
     chunked_data, metadata_sources = my_chunker.chunk_all()
-    # to do another proper function to call for all file type
-    # print(metadata_sources["txt"][0][0])
-    output = make_index(chunked_data.txt, metadata_sources["txt"])
-    visualize_chunk(chunked_data, "txt")
-    for elt in output:
-        print(elt)
+
+    my_indexer = Indexer(chunked_data, metadata_sources)
+    clean_meta = my_indexer.make_all_metadata_index()
+
+    # print(clean_meta)
+    # visualize_chunk(chunked_data, "txt")
+    # for elt in clean_meta.txt:
+        # for test in elt:
+            # print(test.last_character_index - test.first_character_index)
 
 
 if __name__ == "__main__":
