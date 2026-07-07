@@ -14,8 +14,8 @@ def visualize_chunk(chunked_data: Chunked_data, data_type: str):
 
 
 def main():
-    # database = "vllm-0.10.1" #to define later
-    database = "bible"
+    database = "vllm-0.10.1" #to define later
+    # database = "bible"
 
     load = Loader(database)
     raw_data = load.load_all()
@@ -26,7 +26,9 @@ def main():
     my_indexer = Indexer(chunked_data, metadata_sources)
     clean_meta = my_indexer.make_all_metadata_index()
 
-    print(clean_meta.txt[0][0])
+    print(clean_meta.txt[13][0])
+    print("============")
+    print(chunked_data.txt[13][0])
     # visualize_chunk(chunked_data, "txt")
     # for elt in clean_meta.txt:
         # for test in elt:
