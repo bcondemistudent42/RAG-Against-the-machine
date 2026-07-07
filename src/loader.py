@@ -8,6 +8,7 @@ class Raw_data:
     md: list[Document]
     txt: list[Document]
 
+
 class Loader:
     def __init__(self, folder_name: str):
         self.folder_path = Path(folder_name)
