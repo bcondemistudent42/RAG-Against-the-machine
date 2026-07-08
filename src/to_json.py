@@ -10,20 +10,21 @@ class JsonCreator:
         self.chunks = chunks
         self.metadata = metadata
 
-    def convertor(self, file_type: FileType):
+    def convertor(self):
         chunk_idx = 0
-        big_dic = {}
+        big_lst = []
         for i in range(len(self.chunks.txt)):
             for j in range(len(self.chunks.txt[i])):
-                big_dic[chunk_idx] = {
+                temp = {
                     "chunk_idx": chunk_idx,
                     "file_path": self.metadata.txt[i][j].file_path,
-                    "start": self.metadata.txt[i][j].first_character_index,
-                    "end": self.metadata.txt[i][j].last_character_index,
+                    "first_character_index": self.metadata.txt[i][j].first_character_index,
+                    "last_character_index": self.metadata.txt[i][j].last_character_index,
                     "content": self.chunks.txt[i][j]
                 }
+                big_lst.append(temp)
                 chunk_idx += 1
-        return (big_dic)
+        return (big_lst)
 
 
 

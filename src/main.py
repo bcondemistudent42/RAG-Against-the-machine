@@ -29,7 +29,6 @@ def main():
 
     make_json = JsonCreator(chunked_data, metadatas)
     test = make_json.convertor()
-    test = dict(test)
     import json
     print(json.dumps(test, indent=4))
 
