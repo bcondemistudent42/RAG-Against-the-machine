@@ -7,25 +7,29 @@ from indexing import OrganisedMetadata, MinimalSource
 
 class JsonCreator:
     def __init__(self, chunks: ChunkedData, metadata: OrganisedMetadata):
+        self.big_dict = {}
         self.chunks = chunks
         self.metadata = metadata
 
-    def convertor(self):
-        chunk_idx = 0
-        big_lst = []
-        for i in range(len(self.chunks.txt)):
-            for j in range(len(self.chunks.txt[i])):
+    def _convertor(self, data_type: FileType, chunk_idx: int):
+        for i in range(len(getattr(self.chunks, data_type))):
+            for j in range(len(getattr(self.chunks, data_type)[i])):
                 temp = {
                     "chunk_idx": chunk_idx,
-                    "file_path": self.metadata.txt[i][j].file_path,
-                    "first_character_index": self.metadata.txt[i][j].first_character_index,
-                    "last_character_index": self.metadata.txt[i][j].last_character_index,
-                    "content": self.chunks.txt[i][j]
+                    "file_path": getattr(self.metadata, data_type)[i][j].file_path,
+                    "first_character_index": getattr(self.metadata, data_type)[i][j].first_character_index,
+                    "last_character_index": getattr(self.metadata, data_type)[i][j].last_character_index,
+                    "content": getattr(self.chunks, data_type)[i][j]
                 }
-                big_lst.append(temp)
+                self.big_dict[chunk_idx] = temp
                 chunk_idx += 1
-        return (big_lst)
 
+    def convert_all(self):
+        chunk_idx = 0
+        for data_type in FileType:
+            self._convertor(data_type, chunk_idx)
+            chunk_idx = len(self.big_dict.keys())
+        return self.big_dict
 
 
 

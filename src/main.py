@@ -28,9 +28,10 @@ def main():
     metadatas = my_indexer.make_all_metadata_index()
 
     make_json = JsonCreator(chunked_data, metadatas)
-    test = make_json.convertor()
+    to_json_dump = make_json.convert_all()
     import json
-    print(json.dumps(test, indent=4))
+    with open("chunk.txt", "w") as f:
+        f.write(json.dumps(to_json_dump, indent=4))
 
 
     # print(metadatas.txt[13][0])
