@@ -47,12 +47,3 @@ class Chunker():
             metadata_srcs[each_type] = []
             metadata_srcs[each_type].append(temp_meta)
         return (ChunkedData(**output), metadata_srcs)
-
-
-
-
-        #to filter depending on type
-        # for elt in chunks:
-            # print("\n_____START CHUNK______")
-            # print(f"{elt}")
-            # print("_____END CHUNK______\n")
