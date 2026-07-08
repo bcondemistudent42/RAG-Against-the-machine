@@ -1,6 +1,6 @@
 from my_enum import FileType
 from pydantic import BaseModel
-from chunker import Chunked_data
+from chunker import ChunkedData
 from dataclasses import dataclass
 
 class MinimalSource(BaseModel):
@@ -9,7 +9,7 @@ class MinimalSource(BaseModel):
     last_character_index: int
 
 @dataclass
-class Organised_Metadata:
+class OrganisedMetadata:
     py: list[MinimalSource]
     md: list[MinimalSource]
     txt: list[MinimalSource]
@@ -26,15 +26,15 @@ class Indexer:
             output[data_type] = []
             temp = self._make_metadata_index(getattr(self.chunked_data, data_type), self.all_sources[data_type])
             output[data_type] = temp
-        return (Organised_Metadata(**output))
+        return (OrganisedMetadata(**output))
 
     @staticmethod
     def _make_metadata_index(typed_data: list[list[str]], metadata_typed: list[str]) -> list[MinimalSource]:
-        output = []
         file = -1
+        output = []
         for chunk in typed_data:
-            prev_len = 0
             file += 1
+            prev_len = 0
             all_file_metadata = []
             for each_file in chunk:
                 actual_len = len(each_file)

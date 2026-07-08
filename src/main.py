@@ -1,9 +1,10 @@
 from loader import Loader
 from indexing import Indexer
-from chunker import Chunker, Chunked_data
+from chunker import Chunker, ChunkedData
+from to_json import JsonCreator
 
 
-def visualize_chunk(chunked_data: Chunked_data, data_type: str):
+def visualize_chunk(chunked_data: ChunkedData, data_type: str):
     target_data = getattr(chunked_data, data_type)
     for elt in target_data:
         for each in elt:
@@ -24,11 +25,19 @@ def main():
     chunked_data, metadata_sources = my_chunker.chunk_all()
 
     my_indexer = Indexer(chunked_data, metadata_sources)
-    clean_meta = my_indexer.make_all_metadata_index()
+    metadatas = my_indexer.make_all_metadata_index()
 
-    print(clean_meta.txt[13][0])
-    print("============")
-    print(chunked_data.txt[13][0])
+    make_json = JsonCreator(chunked_data, metadatas)
+    test = make_json.convertor()
+    test = dict(test)
+    import json
+    print(json.dumps(test, indent=4))
+
+
+    # print(metadatas.txt[13][0])
+    # print("============")
+    # print(chunked_data.txt[13][0])
+    #                    Files Chunks
     # visualize_chunk(chunked_data, "txt")
     # for elt in clean_meta.txt:
         # for test in elt:
@@ -38,11 +47,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# sauvgarder data en json
-# dabord regardr comment implementer bm 25
-# tout est bien chunker, juste a relier au metadata plus tard
-
-# Clean data structure:
-# [list of [chunked_documents]]
-# [chunked_document] = [chunk_of_txt] of size 2000
+# Tout transformer en json

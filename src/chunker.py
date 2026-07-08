@@ -6,7 +6,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter, Language
 
 
 @dataclass
-class Chunked_data:
+class ChunkedData:
     py: list[Document]
     md: list[Document]
     txt: list[Document]
@@ -38,7 +38,7 @@ class Chunker():
         metadata_srcs = [x.metadata["source"] for x in typed_data]
         return (chunk, metadata_srcs)
 
-    def chunk_all(self) -> Chunked_data:
+    def chunk_all(self) -> ChunkedData:
         output = {}
         metadata_srcs = {}
         for each_type in FileType:
@@ -46,7 +46,7 @@ class Chunker():
             output[each_type], temp_meta = self.splitter(getattr(self.raw_data, each_type), each_type)
             metadata_srcs[each_type] = []
             metadata_srcs[each_type].append(temp_meta)
-        return (Chunked_data(**output), metadata_srcs)
+        return (ChunkedData(**output), metadata_srcs)
 
 
 
