@@ -1,8 +1,7 @@
 import json
-from dataclasses import asdict
 from my_enum import FileType
 from chunker import ChunkedData
-from indexing import OrganisedMetadata, MinimalSource
+from indexing import OrganisedMetadata
 
 
 class JsonCreator:
@@ -31,16 +30,6 @@ class JsonCreator:
             chunk_idx = len(self.big_dict.keys())
         return self.big_dict
 
-
-
-# chunk id for all chunk not unique for each file
-
-
-
-
-
-# file_path: str
-# first_character_index: int
-# last_character_index: int
-# index
-# chunk
+    def write_json(self):
+        with open("chunk.json", "w") as f:
+            f.write(json.dumps(self.big_dict, indent=4))
