@@ -15,7 +15,7 @@ class OrganisedMetadata:
     txt: list[MinimalSource]
 
 class Indexer:
-    def __init__(self, chunked_data: Chunked_data, all_sources: dict[str : str]):
+    def __init__(self, chunked_data: ChunkedData, all_sources: dict[str : str]):
         self.chunked_data = chunked_data
         self.all_sources = all_sources
 
