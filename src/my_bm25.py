@@ -3,9 +3,10 @@ from my_enum import FileType
 
 
 class to_Bm25:
-    def __init__(self, chunked_data):
+    def __init__(self, chunked_data, k: int):
         self.chunked_data = chunked_data
         self.corpus = []
+        self.k = k
 
     def convert_to_corpus(self):
         for data_type in FileType:
@@ -18,3 +19,6 @@ class to_Bm25:
         retriever = bm25s.BM25(corpus=self.corpus)
         retriever.index(corpus_tokens)
         retriever.save("from_scratch")
+
+    # def find_k_relevant(self):
+        # 
