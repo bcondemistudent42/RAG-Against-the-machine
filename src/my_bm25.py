@@ -1,4 +1,5 @@
 import bm25s
+from required_class import UnansweredQuestion
 from my_enum import FileType
 
 
@@ -18,7 +19,14 @@ class to_Bm25:
         corpus_tokens = bm25s.tokenize(self.corpus)
         retriever = bm25s.BM25(corpus=self.corpus)
         retriever.index(corpus_tokens)
-        retriever.save("from_scratch")
+        retriever.save("indexing")
+        self.retriever = retriever
 
-    # def find_k_relevant(self):
-        # 
+    def find_k_relevant(self, questions: list[UnansweredQuestion]):
+        search_k_retreiver = bm25s.BM25.load("indexing")
+        output = []
+        for each_question in questions:
+            query_tokens = bm25s.tokenize([each_question.question])
+            docs, _ = search_k_retreiver.retrieve(query_tokens, k=self.k)
+            output.append(docs.tolist())
+        return (output)

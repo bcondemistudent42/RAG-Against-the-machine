@@ -1,7 +1,7 @@
 from loader import Loader
+from my_bm25 import to_Bm25
 from indexing import Indexer
 from to_json import JsonCreator
-from my_bm25 import to_Bm25
 from chunker import Chunker, ChunkedData
 
 
@@ -16,15 +16,13 @@ def visualize_chunk(chunked_data: ChunkedData, data_type: str):
 
 def main():
     database = "vllm-0.10.1" #to define later
-    k = 4 # to define later
-    path_of_questions = "datasets_public/public/UnansweredQuestions/dataset_docs_public.json" # to define later
-    # database = "bible"
+    k = 10 # to define later
+    path_of_questions = "datasets_public/public/UnansweredQuestions/dataset_code_public.json" # to define later
 
     load = Loader(database)
     raw_data = load.load_all()
-    questions = load.load_questions(path_of_questions)
-    for elt in questions:
-        print(elt)
+    no_answer_q = load.load_questions(path_of_questions)
+    questions = load.validate_unanswered_q(no_answer_q)
 
     my_chunker = Chunker(raw_data)
     chunked_data, metadata_sources = my_chunker.chunk_all()
@@ -38,17 +36,16 @@ def main():
 
     bm = to_Bm25(chunked_data, k)
     bm.convert_to_corpus()
-    bm.tokenize_and_index()
-
+    bm.tokenize_and_index() #to execute only for index
+    check = bm.find_k_relevant(questions)
+    print(check)
 
 
 if __name__ == "__main__":
     # try:
         main()
     # except Exception as e:
-        # print(e)
-
-    # Use BM25 to get the -k most corresponding answers
+        # print("[ERROR]: ", e)
 
 # > To build dynamically later:
     # chunk size depending on input

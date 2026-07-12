@@ -2,7 +2,9 @@ import json
 from typing import Any
 from pathlib import Path
 from dataclasses import dataclass
+from pydantic import ValidationError
 from langchain_core.documents import Document
+from required_class import UnansweredQuestion
 
 @dataclass
 class Raw_data:
@@ -39,14 +41,21 @@ class Loader:
     @staticmethod
     def load_questions(dataset_path: str) -> list[dict[str, Any]]:
         path = Path(dataset_path)
-        try:
-            raw = path.read_text()
-            all_questions = json.loads(raw)
-        except Exception as e:
-            print(f"An error occured with questions file: {e}")
-            return
+        raw = path.read_text()
+        all_questions = json.loads(raw)
         questions = all_questions.get("rag_questions", [])
-        if not isinstance(questions, list):
+        if not isinstance(questions, list) or len(questions) == 0:
             raise ValueError(
-                "Invalid dataset format: rag_questions must be a list")
+                "Invalid dataset format: rag_questions must be a non empty list"
+            )
         return list(questions)
+
+    @staticmethod
+    def validate_unanswered_q(questions: list[dict[str, Any]]) -> list[UnansweredQuestion]:
+        output = []
+        for each_question in questions:
+            temp = UnansweredQuestion(
+                question_id=each_question["question_id"],
+                question=each_question["question"])
+            output.append(temp)
+        return output
