@@ -1,5 +1,7 @@
-from dataclasses import dataclass
+import json
+from typing import Any
 from pathlib import Path
+from dataclasses import dataclass
 from langchain_core.documents import Document
 
 @dataclass
@@ -11,11 +13,11 @@ class Raw_data:
 
 class Loader:
     def __init__(self, folder_name: str):
-        self.folder_path = Path(folder_name)
+        self.path_ton_index = Path(folder_name)
 
     def _load_extension(self, ext: str) -> list[Document]:
         docs = []
-        for file_path in self.folder_path.rglob(f"*.{ext}"):
+        for file_path in self.path_ton_index.rglob(f"*.{ext}"):
             try:
                 content = file_path.read_text()
                 docs.append(
@@ -33,3 +35,18 @@ class Loader:
         md = self._load_extension("md")
         py = self._load_extension("py")
         return Raw_data(py, md, txt)
+
+    @staticmethod
+    def load_questions(dataset_path: str) -> list[dict[str, Any]]:
+        path = Path(dataset_path)
+        try:
+            raw = path.read_text()
+            all_questions = json.loads(raw)
+        except Exception as e:
+            print(f"An error occured with questions file: {e}")
+            return
+        questions = all_questions.get("rag_questions", [])
+        if not isinstance(questions, list):
+            raise ValueError(
+                "Invalid dataset format: rag_questions must be a list")
+        return list(questions)
