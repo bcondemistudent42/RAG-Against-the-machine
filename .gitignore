@@ -9,5 +9,6 @@ wheels/
 .ruff*
 vllm-0.10.1/
 bible/
-*.json
+chunk.json
 from_scratch/
+indexing/

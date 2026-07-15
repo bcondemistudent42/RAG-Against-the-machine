@@ -1,21 +1,11 @@
 import uuid
-from typing import List, Any
+from typing import List
 from pydantic import BaseModel, Field
-
-class RagDataset(BaseModel):
-    rag_questions: List[AnsweredQuestion | UnansweredQuestion]
 
 class MinimalSource(BaseModel):
     file_path: str
     first_character_index: int
     last_character_index: int
-
-class StudentSearchResults(BaseModel):
-    search_results: List[MinimalSearchResults]
-    k: int
-
-class StudentSearchResultsAndAnswer(StudentSearchResults):
-    search_results: List[MinimalAnswer]
 
 class MinimalSearchResults(BaseModel):
     question_id: str
@@ -33,5 +23,19 @@ class UnansweredQuestion(BaseModel):
 class AnsweredQuestion(UnansweredQuestion):
     sources: List[MinimalSource]
     answer: str
+
+class RagDataset(BaseModel):
+    rag_questions: List[AnsweredQuestion | UnansweredQuestion]
+
+
+class StudentSearchResults(BaseModel):
+    search_results: List[MinimalSearchResults]
+    k: int
+
+class StudentSearchResultsAndAnswer(StudentSearchResults):
+    search_results: List[MinimalAnswer]
+
+
+
 
 
