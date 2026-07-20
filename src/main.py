@@ -16,13 +16,14 @@ def visualize_chunk(chunked_data: ChunkedData, data_type: str):
 
 def main():
     database = "vllm-0.10.1" #to define later
-    k = 10 # to define later
-    path_of_questions = "datasets_public/public/UnansweredQuestions/dataset_code_public.json" # to define later
+    k = 1 # to define later
+    path_of_questions = "datasets_public/public/UnansweredQuestions/dataset_docs_public.json" # to define later
 
     load = Loader(database)
     raw_data = load.load_all()
     no_answer_q = load.load_questions(path_of_questions)
     questions = load.validate_unanswered_q(no_answer_q)
+    # to do for all questions actually only doing for codes questions
 
     my_chunker = Chunker(raw_data)
     chunked_data, metadata_sources = my_chunker.chunk_all()
@@ -38,6 +39,10 @@ def main():
     bm.convert_to_corpus()
     bm.tokenize_and_index() #to execute only for index
     check = bm.find_k_relevant(questions)
+    import json
+    with open('chunk.json') as json_file:
+        to_get = json.load(json_file)
+    print(to_get[str(check[0][0][0])]["content"])
     print(check)
 
 
