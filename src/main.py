@@ -39,6 +39,9 @@ def main():
     bm.convert_to_corpus()
     bm.tokenize_and_index() #to execute only for index
     check = bm.find_k_relevant(questions)
+    
+    
+    # to do this for all n
     import json
     with open('chunk.json') as json_file:
         to_get = json.load(json_file)
