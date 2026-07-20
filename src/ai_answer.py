@@ -1,11 +1,22 @@
-from vllm import LLM, SamplingParams
+import dspy
 
-prompts = [
-    "Hello, my name is",
-    "The president of the United States is",
-    "The capital of France is",
-    "The future of AI is",
+lm = dspy.LM(
+    "openai/Qwen/Qwen3-0.6B",
+    api_base="http://localhost:8000/v1",
+    api_key="none"
+)
+
+dspy.configure(lm=lm)
+
+messages = [
+    {
+        "role": "system",
+        "content": "You are a helpful assistant"
+    },
+    {
+        "role": "user",
+        "content": "Who created Star Wars"
+    }
 ]
-sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
 
-llm = LLM(model="openai/qwen3:0.6b")
+print(lm(messages = messages)[0])
