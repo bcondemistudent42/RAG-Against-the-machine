@@ -3,6 +3,7 @@ from my_bm25 import to_Bm25
 from indexing import Indexer
 from to_json import JsonCreator
 from chunker import Chunker, ChunkedData
+from ai_answer import Ai_work
 
 
 def visualize_chunk(chunked_data: ChunkedData, data_type: str):
@@ -38,15 +39,13 @@ def main():
     bm = to_Bm25(chunked_data, k)
     bm.convert_to_corpus()
     bm.tokenize_and_index() #to execute only for index
-    check = bm.find_k_relevant(questions)
-    
-    
+    max_relevant = bm.find_k_relevant(questions)
+
+    my_ai = Ai_work()
+    my_ai.get_answers(questions, max_relevant)
+
+
     # to do this for all n
-    import json
-    with open('chunk.json') as json_file:
-        to_get = json.load(json_file)
-    print(to_get[str(check[0][0][0])]["content"])
-    print(check)
 
 
 if __name__ == "__main__":
