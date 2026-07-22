@@ -34,5 +34,7 @@ class Ai_work:
             question=each_question.question
             )
             print("\n=========")
+            print(each_question.question)
+            print("________________")
             print(result.answer)
             print("=========\n")

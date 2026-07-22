@@ -18,13 +18,13 @@ def visualize_chunk(chunked_data: ChunkedData, data_type: str):
 def main():
     database = "vllm-0.10.1" #to define later
     k = 1 # to define later
-    path_of_questions = "datasets_public/public/UnansweredQuestions/dataset_docs_public.json" # to define later
+    path_of_questions = "datasets_public/public/UnansweredQuestions/dataset_docs_public.json"
+    # to define later
 
     load = Loader(database)
     raw_data = load.load_all()
     no_answer_q = load.load_questions(path_of_questions)
     questions = load.validate_unanswered_q(no_answer_q)
-    # to do for all questions actually only doing for codes questions
 
     my_chunker = Chunker(raw_data)
     chunked_data, metadata_sources = my_chunker.chunk_all()
@@ -45,8 +45,6 @@ def main():
     my_ai.get_answers(questions, max_relevant)
 
 
-    # to do this for all n
-
 
 if __name__ == "__main__":
     # try:
@@ -59,4 +57,5 @@ if __name__ == "__main__":
     # number of chunk taken depending on K
     # Question to answers
     # Dataset to see if dynamic
-
+    # to do the cli with python fire
+    # to do chroma db abd embedding
