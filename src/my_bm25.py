@@ -16,15 +16,17 @@ class to_Bm25:
                     self.corpus.append(each_chunk)
 
     def tokenize_and_index(self):
+        if len(self.corpus) == 0:
+            raise ValueError("No data was given")
         corpus_tokens = bm25s.tokenize(self.corpus)
         retriever = bm25s.BM25(corpus=self.corpus)
         retriever.index(corpus_tokens)
-        retriever.save("indexing")
+        retriever.save("data/processed/bm25_index")
         self.retriever = retriever
 
     @staticmethod
     def find_k_relevant(questions: list[UnansweredQuestion], k: int):
-        search_k_retreiver = bm25s.BM25.load("indexing")
+        search_k_retreiver = bm25s.BM25.load("data/processed/bm25_index")
         output = []
         for each_question in questions:
             query_tokens = bm25s.tokenize([each_question.question])

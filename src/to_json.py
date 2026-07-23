@@ -30,6 +30,7 @@ class JsonCreator:
             chunk_idx = len(self.big_dict.keys())
         return self.big_dict
 
+# to secure if processed folder not created
     def write_json(self):
-        with open("chunk.json", "w") as f:
+        with open("data/processed/my_chunk.json", "w") as f:
             f.write(json.dumps(self.big_dict, indent=4))

@@ -33,4 +33,6 @@ def index(chunk_size: int = 2000):
     bm.tokenize_and_index()
 
 if __name__ == '__main__':
-  fire.Fire()
+  fire.Fire({
+      'index': index,
+  })

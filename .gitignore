@@ -12,3 +12,4 @@ bible/
 chunk.json
 from_scratch/
 indexing/
+data/processed/*
