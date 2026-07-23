@@ -13,26 +13,28 @@ class ChunkedData:
 
 
 class Chunker():
-    def __init__(self, raw_data: Raw_data):
+    def __init__(self, raw_data: Raw_data, chunk_size: int):
         self.raw_data = raw_data
-
-        # to -1 to chunk size from user
+        self.chunk_size = chunk_size
 
     def splitter(self, typed_data: Document, doc_type: FileType):
         if doc_type == FileType.PY:
             multi_splitter = RecursiveCharacterTextSplitter.from_language(
-                chunk_size=2000,
-                chunk_overlap=100,
+                chunk_size=self.chunk_size,
+                chunk_overlap=0, #setting it to 0 to see later
                 language=Language.PYTHON
             )
         elif doc_type == FileType.MD:
             multi_splitter = RecursiveCharacterTextSplitter.from_language(
-                chunk_size=2000,
-                chunk_overlap=100,
+                chunk_size=self.chunk_size,
+                chunk_overlap=0, #setting it to 0 to see later
                 language=Language.MARKDOWN
             )
         else:
-            multi_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=100)
+            multi_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=self.chunk_size,
+                chunk_overlap=0 #setting it to 0 to see later
+            )
 
         chunk = [multi_splitter.split_text(x.page_content) for x in typed_data]
         metadata_srcs = [x.metadata["source"] for x in typed_data]
