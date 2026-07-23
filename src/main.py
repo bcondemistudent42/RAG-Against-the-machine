@@ -36,10 +36,10 @@ def main():
     make_json.convert_all()
     make_json.write_json()
 
-    bm = to_Bm25(chunked_data, k)
+    bm = to_Bm25(chunked_data)
     bm.convert_to_corpus()
     bm.tokenize_and_index() #to execute only for index
-    max_relevant = bm.find_k_relevant(questions)
+    max_relevant = bm.find_k_relevant(questions, k)
 
     my_ai = Ai_work()
     my_ai.get_answers(questions, max_relevant)

@@ -28,9 +28,9 @@ def index(chunk_size: int = 2000):
     make_json.convert_all()
     make_json.write_json()
 
-
-def multiply(x, y):
-  return x * y
+    bm = to_Bm25(chunked_data)
+    bm.convert_to_corpus()
+    bm.tokenize_and_index()
 
 if __name__ == '__main__':
   fire.Fire()

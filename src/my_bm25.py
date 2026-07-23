@@ -4,10 +4,10 @@ from my_enum import FileType
 
 
 class to_Bm25:
-    def __init__(self, chunked_data, k: int):
+    def __init__(self, chunked_data):
         self.chunked_data = chunked_data
         self.corpus = []
-        self.k = k
+        # self.k = k
 
     def convert_to_corpus(self):
         for data_type in FileType:
@@ -22,11 +22,12 @@ class to_Bm25:
         retriever.save("indexing")
         self.retriever = retriever
 
-    def find_k_relevant(self, questions: list[UnansweredQuestion]):
+    @staticmethod
+    def find_k_relevant(questions: list[UnansweredQuestion], k: int):
         search_k_retreiver = bm25s.BM25.load("indexing")
         output = []
         for each_question in questions:
             query_tokens = bm25s.tokenize([each_question.question])
-            docs, _ = search_k_retreiver.retrieve(query_tokens, k=self.k)
+            docs, _ = search_k_retreiver.retrieve(query_tokens, k=k)
             output.append(docs.tolist())
         return (output)
