@@ -4,7 +4,7 @@ from my_enum import FileType
 
 
 class to_Bm25:
-    def __init__(self, chunked_data):
+    def __init__(self, chunked_data=None):
         self.chunked_data = chunked_data
         self.corpus = []
 

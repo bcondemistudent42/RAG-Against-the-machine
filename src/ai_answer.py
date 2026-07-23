@@ -15,7 +15,7 @@ class AnswerBot(dspy.Signature):
 
 class Ai_work:
     def __init__(self):
-        with open('chunk.json') as json_file:
+        with open('chunk.json') as json_file: #to adapt later
             data_chunked = json.load(json_file)
         self.data_chunked = data_chunked
         self.lm = dspy.LM(
