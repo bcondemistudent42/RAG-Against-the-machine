@@ -32,7 +32,14 @@ def index(chunk_size: int = 2000):
     bm.convert_to_corpus()
     bm.tokenize_and_index()
 
+def search(query: str, k: int):
+    bm = to_Bm25(None)
+    max_relevant = bm.find_k_relevant_one(query, k)
+    print(max_relevant)
+
+
 if __name__ == '__main__':
   fire.Fire({
       'index': index,
+      "search": search
   })

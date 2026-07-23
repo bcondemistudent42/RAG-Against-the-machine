@@ -7,7 +7,6 @@ class to_Bm25:
     def __init__(self, chunked_data):
         self.chunked_data = chunked_data
         self.corpus = []
-        # self.k = k
 
     def convert_to_corpus(self):
         for data_type in FileType:
@@ -32,4 +31,13 @@ class to_Bm25:
             query_tokens = bm25s.tokenize([each_question.question])
             docs, _ = search_k_retreiver.retrieve(query_tokens, k=k)
             output.append(docs.tolist())
+        return (output)
+
+    @staticmethod
+    def find_k_relevant_one(question: UnansweredQuestion, k: int):
+        search_k_retreiver = bm25s.BM25.load("data/processed/bm25_index")
+        output = []
+        query_tokens = bm25s.tokenize([question])
+        docs, _ = search_k_retreiver.retrieve(query_tokens, k=k)
+        output.append(docs.tolist())
         return (output)
