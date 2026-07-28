@@ -34,7 +34,7 @@ def index(chunk_size: int = 2000):
     bm.convert_to_corpus()
     bm.tokenize_and_index()
 
-def search(query: str, k: int=4): #setting it to 4  for now
+def search(query: str, k: int=3): #setting it to 3  for now
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
     with open('data/processed/my_chunk.json') as json_file:
         data_chunked = json.load(json_file)
@@ -51,8 +51,14 @@ def search(query: str, k: int=4): #setting it to 4  for now
         # to upgrade the output to be better
     print()
 
-def search_dataset(dataset_path: str, k: int, save_directory: str):
-
+def search_dataset(
+    dataset_path: str="data/datasets/UnansweredQuestions/dataset_docs_public.json",
+    k: int=10,
+    save_directory: str="data/output/search_results/"
+    ):
+    """
+    Run search over a whole dataset and write a StudentSearchResults JSON file.
+    """
     no_answer_q = Loader.load_questions(dataset_path)
     my_questions = Loader.validate_unanswered_q(no_answer_q)
     max_relevant = to_Bm25.find_k_relevant(my_questions, k)
@@ -62,9 +68,12 @@ def search_dataset(dataset_path: str, k: int, save_directory: str):
         k_relevant = chunk_id[0]
         each_q = my_questions[i]
         json_dct = Loader.build_dict(each_q, k_relevant)
+        output["search_results"].append(json_dct)
     JsonCreator.write_any_json(save_directory, output)
 
-# Run search over a whole dataset and write a StudentSearchResults JSON file.
+
+# def answer(query: str, k: int):
+
 
 def main():
       fire.Fire({
@@ -73,14 +82,16 @@ def main():
       "search_dataset": search_dataset
   })
 
+
+# to try improve perf with some np array
 if __name__ == '__main__':
     # try:
         main()
     # except FileNotFoundError as e:
         # print("\n===============")
         # print("[ERROR]")
-        # print("A required file or folder is missing anyway")
-        # print(f"Missing File : {e.filename}")
+        # print("A required file or folder is missing")
+        # print(f"Missing File or Folder: {e.filename}")
         # print("Perhaps you forgot to index ?")
         # print("=================\n")
     # except BaseException as e:

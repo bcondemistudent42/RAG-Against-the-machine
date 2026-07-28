@@ -37,6 +37,13 @@ class JsonCreator:
 
     @staticmethod
     def write_any_json(directory_to_write: str, the_dict: dict):
-        to_write = f"{directory_to_write}/output.json"
-        with open(to_write, "w") as f:
-            f.write(json.dumps(the_dict, indent=4))
+        to_write = f"{directory_to_write}/search_results.json"
+        # to see how to handle when folder not exist
+        # to see with gemini
+        try:
+            with open(to_write, "w") as f:
+                f.write(json.dumps(the_dict, indent=4))
+        except Exception as e:
+            raise ValueError(
+                f'Error occurred while saving JSON to {directory_to_write}: {e}'
+            )
