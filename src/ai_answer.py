@@ -15,7 +15,8 @@ class AnswerBot(dspy.Signature):
 
 class Ai_work:
     def __init__(self):
-        with open('chunk.json') as json_file: #to adapt later
+        # to make dynamic later to see
+        with open('data/processed/my_chunk.json') as json_file: #to adapt later
             data_chunked = json.load(json_file)
         self.data_chunked = data_chunked
         self.lm = dspy.LM(
@@ -38,3 +39,11 @@ class Ai_work:
             print("________________")
             print(result.answer)
             print("=========\n")
+
+    def get_one_answer(self, question: str, index_of_k):
+        reasoning_bot = dspy.ChainOfThought(AnswerBot)
+        result = reasoning_bot(
+        data=self.data_chunked[str(index_of_k[0][0][0])]["content"],
+        question=question
+        )
+        return (result.answer)

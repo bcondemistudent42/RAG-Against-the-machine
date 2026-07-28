@@ -72,14 +72,22 @@ def search_dataset(
     JsonCreator.write_any_json(save_directory, output)
 
 
-# def answer(query: str, k: int):
+def answer(query: str, k: int=3):
+    my_ai = Ai_work()
+    max_relevant = to_Bm25.find_k_relevant_one(query, k)
+    answer = my_ai.get_one_answer(query, max_relevant)
+    print()
+    print(f"Model Answer: {answer}")
+    print()
 
 
 def main():
       fire.Fire({
       'index': index,
       "search": search,
-      "search_dataset": search_dataset
+      "search_dataset": search_dataset,
+      "answer": answer
+
   })
 
 
