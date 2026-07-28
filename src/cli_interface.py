@@ -34,19 +34,43 @@ def index(chunk_size: int = 2000):
     bm.convert_to_corpus()
     bm.tokenize_and_index()
 
-def search(query: str, k: int):
+def search(query: str, k: int=4): #setting it to 4  for now
     bm = to_Bm25()
     max_relevant = bm.find_k_relevant_one(query, k)
     with open('data/processed/my_chunk.json') as json_file: #to adapt later
         data_chunked = json.load(json_file)
     # to do for all k output file path
     cleaned_relevant = max_relevant[0][0]
-    for chunk_id in cleaned_relevant:
-        print(data_chunked[str(chunk_id)]["file_path"])
+    print(f"\nTop k = {k} result:")
+    for i, chunk_id in enumerate(cleaned_relevant):
+        file_path = data_chunked[str(chunk_id)]["file_path"]
+        start_idx = data_chunked[str(chunk_id)]["first_character_index"]
+        end_idx = data_chunked[str(chunk_id)]["last_character_index"]
+        print(
+            f"File rank: {i} File path: {file_path} {start_idx} {end_idx}"
+        )
+        # to upgrade the output to be better
+    print()
 
+# def search_dataset 
+# –dataset_path <path> –k <int> –save_directory <dir>
+# Run search over a whole dataset and write a StudentSearchResults JSON file.
 
-if __name__ == '__main__':
-  fire.Fire({
+def main():
+      fire.Fire({
       'index': index,
       "search": search
   })
+
+if __name__ == '__main__':
+    try:
+        main()
+    except FileNotFoundError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print("A required file or folder is missing anyway")
+        print(f"Missing File : {e.filename}")
+        print("Perhaps you forgot to index ?")
+        print("=================\n")
+    except BaseException as e:
+        print(f"An error occured: {e}")

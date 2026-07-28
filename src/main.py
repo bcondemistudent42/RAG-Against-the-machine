@@ -59,3 +59,4 @@ if __name__ == "__main__":
     # Dataset to see if dynamic
     # to do the cli with python fire
     # to do chroma db abd embedding
+    # to watch linux memory virtualisation again
