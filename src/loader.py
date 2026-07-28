@@ -59,3 +59,35 @@ class Loader:
                 question=each_question["question"])
             output.append(temp)
         return output
+
+    @staticmethod
+    def data_from_relevant(data_chunked, chunk_id):
+        """
+        Extract data properly
+        """
+        str(chunk_id)
+        file_path = data_chunked[chunk_id]["file_path"]
+        start_idx = data_chunked[chunk_id]["first_character_index"]
+        end_idx = data_chunked[chunk_id]["last_character_index"]
+        return (file_path, start_idx, end_idx)
+
+    @staticmethod
+    def build_dict(question, k_relevant):
+        """
+        build a dict that will be append to search_results
+        """
+        with open('data/processed/my_chunk.json') as json_file:
+            data_chunked = json.load(json_file)
+
+        output = {}
+        output["question_id"] = question.question_id
+        output["question"] = question.question
+        output["retrieved_sources"] = []
+        for each_k in k_relevant:
+            little_dct = {}
+            little_dct["file_path"] = data_chunked[str(each_k)]["file_path"]
+            little_dct["first_character_index"] = data_chunked[str(each_k)]["first_character_index"]
+            little_dct["last_character_index"] = data_chunked[str(each_k)]["last_character_index"]
+            output["retrieved_sources"].append(little_dct)
+        return (output)
+

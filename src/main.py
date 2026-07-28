@@ -34,7 +34,7 @@ def main():
 
     make_json = JsonCreator(chunked_data, metadatas)
     make_json.convert_all()
-    make_json.write_json()
+    make_json.write_chunk()
 
     bm = to_Bm25(chunked_data)
     bm.convert_to_corpus()

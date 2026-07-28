@@ -31,6 +31,12 @@ class JsonCreator:
         return self.big_dict
 
 # to secure if processed folder not created
-    def write_json(self):
+    def write_chunk(self):
         with open("data/processed/my_chunk.json", "w") as f:
             f.write(json.dumps(self.big_dict, indent=4))
+
+    @staticmethod
+    def write_any_json(directory_to_write: str, the_dict: dict):
+        to_write = f"{directory_to_write}/output.json"
+        with open(to_write, "w") as f:
+            f.write(json.dumps(the_dict, indent=4))

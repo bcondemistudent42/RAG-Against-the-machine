@@ -28,7 +28,7 @@ def index(chunk_size: int = 2000):
 
     make_json = JsonCreator(chunked_data, metadatas)
     make_json.convert_all()
-    make_json.write_json()
+    make_json.write_chunk()
 
     bm = to_Bm25(chunked_data)
     bm.convert_to_corpus()
@@ -36,15 +36,15 @@ def index(chunk_size: int = 2000):
 
 def search(query: str, k: int=4): #setting it to 4  for now
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
-    with open('data/processed/my_chunk.json') as json_file: #to adapt later
+    with open('data/processed/my_chunk.json') as json_file:
         data_chunked = json.load(json_file)
-    # to do for all k output file path
     cleaned_relevant = max_relevant[0][0]
     print(f"\nTop k = {k} result:")
     for i, chunk_id in enumerate(cleaned_relevant):
-        file_path = data_chunked[str(chunk_id)]["file_path"]
-        start_idx = data_chunked[str(chunk_id)]["first_character_index"]
-        end_idx = data_chunked[str(chunk_id)]["last_character_index"]
+        file_path, start_idx, end_idx = Loader.data_from_relevant(
+            data_chunked,
+            chunk_id
+            )
         print(
             f"File rank: {i} File path: {file_path} {start_idx} {end_idx}"
         )
@@ -56,7 +56,13 @@ def search_dataset(dataset_path: str, k: int, save_directory: str):
     no_answer_q = Loader.load_questions(dataset_path)
     my_questions = Loader.validate_unanswered_q(no_answer_q)
     max_relevant = to_Bm25.find_k_relevant(my_questions, k)
-    print("TEST")
+    output = {}
+    output["search_results"] = []
+    for i, chunk_id in enumerate(max_relevant):
+        k_relevant = chunk_id[0]
+        each_q = my_questions[i]
+        json_dct = Loader.build_dict(each_q, k_relevant)
+    JsonCreator.write_any_json(save_directory, output)
 
 # Run search over a whole dataset and write a StudentSearchResults JSON file.
 
