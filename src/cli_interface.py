@@ -35,8 +35,7 @@ def index(chunk_size: int = 2000):
     bm.tokenize_and_index()
 
 def search(query: str, k: int=4): #setting it to 4  for now
-    bm = to_Bm25()
-    max_relevant = bm.find_k_relevant_one(query, k)
+    max_relevant = to_Bm25.find_k_relevant_one(query, k)
     with open('data/processed/my_chunk.json') as json_file: #to adapt later
         data_chunked = json.load(json_file)
     # to do for all k output file path
@@ -52,25 +51,31 @@ def search(query: str, k: int=4): #setting it to 4  for now
         # to upgrade the output to be better
     print()
 
-# def search_dataset 
-# –dataset_path <path> –k <int> –save_directory <dir>
+def search_dataset(dataset_path: str, k: int, save_directory: str):
+
+    no_answer_q = Loader.load_questions(dataset_path)
+    my_questions = Loader.validate_unanswered_q(no_answer_q)
+    max_relevant = to_Bm25.find_k_relevant(my_questions, k)
+    print("TEST")
+
 # Run search over a whole dataset and write a StudentSearchResults JSON file.
 
 def main():
       fire.Fire({
       'index': index,
-      "search": search
+      "search": search,
+      "search_dataset": search_dataset
   })
 
 if __name__ == '__main__':
-    try:
+    # try:
         main()
-    except FileNotFoundError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print("A required file or folder is missing anyway")
-        print(f"Missing File : {e.filename}")
-        print("Perhaps you forgot to index ?")
-        print("=================\n")
-    except BaseException as e:
-        print(f"An error occured: {e}")
+    # except FileNotFoundError as e:
+        # print("\n===============")
+        # print("[ERROR]")
+        # print("A required file or folder is missing anyway")
+        # print(f"Missing File : {e.filename}")
+        # print("Perhaps you forgot to index ?")
+        # print("=================\n")
+    # except BaseException as e:
+        # print(f"An error occured: {e}")
