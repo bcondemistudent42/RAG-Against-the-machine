@@ -85,9 +85,14 @@ def answer(query: str, k: int=3):
     print()
     # improve output
 
-def answer_dataset(path_of_questions: str, save_directory: str):
+def answer_dataset(
+    student_search_results_path: str ='data/output/search_results/dataset_docs_public.json',
+    save_directory: str = 'data/output/search_results_and_answer'
+    ):
+
     k = 10 #to see later how much should i set it 
 
+# tp modify answer datsets
     no_answer_q = Loader.load_questions(path_of_questions)
     questions = Loader.validate_unanswered_q(no_answer_q)
 
