@@ -27,6 +27,7 @@ class Ai_work:
         dspy.configure(lm=self.lm)
 
     def get_answers(self, questions: list[UnansweredQuestion], index_of_k):
+        output = []
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
         for i, each_question in enumerate(questions):
             # print() #to see what format maybe to send all content with a get_content
@@ -34,11 +35,15 @@ class Ai_work:
             data=self.data_chunked[str(index_of_k[i][0][0])]["content"],
             question=each_question.question
             )
-            print("\n=========")
-            print(each_question.question)
-            print("________________")
-            print(result.answer)
-            print("=========\n")
+            output.append(result.answer)
+            # print("\n=========")
+            # print(each_question.question)
+            # print("________________")
+            # print(result.answer)
+            # print("=========\n")
+        return output
+
+
 
     def get_one_answer(self, question: str, index_of_k):
         reasoning_bot = dspy.ChainOfThought(AnswerBot)

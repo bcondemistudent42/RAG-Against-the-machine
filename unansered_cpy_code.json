@@ -1,16 +1,20 @@
 {
   "rag_questions": [
     {
-      "question_id": "189c8b8a-e59c-4fca-92ad-c02df42cbe40",
-      "question": "What activation formats does the fused batched MoE layer return in vLLM?"
+      "question_id": "43927740-4195-49d1-b606-e2e813d3e2fe",
+      "question": "What's the default value of the gpu parameter in vLLM's get_max_shared_memory_bytes function?"
     },
     {
-      "question_id": "02789461-05fd-435d-9673-91606102d6c9",
-      "question": "What are the default values for FP8_MIN and FP8_MAX constants in vLLM's triton_flash_attention module?"
+      "question_id": "ea812b8d-317d-48bd-a149-bf73747592d5",
+      "question": "What is the type hint for the kv_range_for_decode parameter in the _attention_with_mask method?"
     },
     {
-      "question_id": "e852801e-b909-4360-82ea-cedb2a1be919",
-      "question": "What determines whether vLLM's sampler returns Pythonized results or deferred Pythonization arguments?"
+      "question_id": "5ff8e342-b4e2-45e1-9ef0-990915c5bb1f",
+      "question": "What is the default timeout value for VLLM_RPC_TIMEOUT environment variable?"
+    },
+    {
+      "question_id": "cc784ab6-ef8a-402d-b874-4160ec7c87f1",
+      "question": "What determines whether custom allreduce is enabled in vLLM's CudaCommunicator?"
     }
   ]
 }

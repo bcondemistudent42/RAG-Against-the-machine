@@ -1,0 +1,233 @@
+{
+    "search_results": [
+        {
+            "question_id": "43927740-4195-49d1-b606-e2e813d3e2fe",
+            "question": "What's the default value of the gpu parameter in vLLM's get_max_shared_memory_bytes function?",
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/features/tool_calling.md",
+                    "first_character_index": 3177,
+                    "last_character_index": 4933
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/config/cache.py",
+                    "first_character_index": 1246,
+                    "last_character_index": 3205
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/tool_use/test_qwen3coder_tool_parser.py",
+                    "first_character_index": 11776,
+                    "last_character_index": 13719
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/kernels/attention/test_attention.py",
+                    "first_character_index": 0,
+                    "last_character_index": 1611
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/utils/__init__.py",
+                    "first_character_index": 13184,
+                    "last_character_index": 14889
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/tool_use/test_qwen3coder_tool_parser.py",
+                    "first_character_index": 14000,
+                    "last_character_index": 15963
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/tool_use/test_qwen3coder_tool_parser.py",
+                    "first_character_index": 8248,
+                    "last_character_index": 10154
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/tool_use/test_qwen3coder_tool_parser.py",
+                    "first_character_index": 6279,
+                    "last_character_index": 8247
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/third_party/pynvml.py",
+                    "first_character_index": 45053,
+                    "last_character_index": 47010
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/examples/online_serving/structured_outputs/structured_outputs.py",
+                    "first_character_index": 3945,
+                    "last_character_index": 5486
+                }
+            ],
+            "answer": "No default value for the `gpu` parameter is explicitly provided in the given data."
+        },
+        {
+            "question_id": "ea812b8d-317d-48bd-a149-bf73747592d5",
+            "question": "What is the type hint for the kv_range_for_decode parameter in the _attention_with_mask method?",
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/mllama.py",
+                    "first_character_index": 37824,
+                    "last_character_index": 39779
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/mllama.py",
+                    "first_character_index": 35994,
+                    "last_character_index": 37823
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/engine/arg_utils.py",
+                    "first_character_index": 9268,
+                    "last_character_index": 9912
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/entrypoints/openai/test_run_batch.py",
+                    "first_character_index": 3382,
+                    "last_character_index": 4134
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/mllama.py",
+                    "first_character_index": 43440,
+                    "last_character_index": 44189
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/mllama.py",
+                    "first_character_index": 45753,
+                    "last_character_index": 47278
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/models/mllama.py",
+                    "first_character_index": 64582,
+                    "last_character_index": 66294
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/tool_use/test_qwen3coder_tool_parser.py",
+                    "first_character_index": 11776,
+                    "last_character_index": 13719
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/config/__init__.py",
+                    "first_character_index": 87582,
+                    "last_character_index": 89190
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/entrypoints/test_chat_utils.py",
+                    "first_character_index": 14136,
+                    "last_character_index": 15254
+                }
+            ],
+            "answer": "list[tuple[int, int]]"
+        },
+        {
+            "question_id": "5ff8e342-b4e2-45e1-9ef0-990915c5bb1f",
+            "question": "What is the default timeout value for VLLM_RPC_TIMEOUT environment variable?",
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/features/multimodal_inputs.md",
+                    "first_character_index": 19139,
+                    "last_character_index": 20251
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/contributing/profiling.md",
+                    "first_character_index": 0,
+                    "last_character_index": 1954
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/features/quantization/inc.md",
+                    "first_character_index": 1314,
+                    "last_character_index": 3143
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/tests/kv_transfer/test_module.py",
+                    "first_character_index": 165,
+                    "last_character_index": 2048
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/features/multimodal_inputs.md",
+                    "first_character_index": 14206,
+                    "last_character_index": 15031
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/executor/ray_distributed_executor.py",
+                    "first_character_index": 22457,
+                    "last_character_index": 24338
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/engine/multiprocessing/client.py",
+                    "first_character_index": 13610,
+                    "last_character_index": 15598
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/model_loader/tensorizer.py",
+                    "first_character_index": 16496,
+                    "last_character_index": 18468
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/attention/selector.py",
+                    "first_character_index": 0,
+                    "last_character_index": 1794
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/docs/features/multimodal_inputs.md",
+                    "first_character_index": 15032,
+                    "last_character_index": 16951
+                }
+            ],
+            "answer": "The default timeout value for the VLLM_RPC_TIMEOUT environment variable is 10 seconds."
+        },
+        {
+            "question_id": "cc784ab6-ef8a-402d-b874-4160ec7c87f1",
+            "question": "What determines whether custom allreduce is enabled in vLLM's CudaCommunicator?",
+            "retrieved_sources": [
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/config/compilation.py",
+                    "first_character_index": 2107,
+                    "last_character_index": 4062
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/device_communicators/custom_all_reduce.py",
+                    "first_character_index": 4633,
+                    "last_character_index": 5857
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/device_communicators/cuda_communicator.py",
+                    "first_character_index": 400,
+                    "last_character_index": 2197
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/device_communicators/custom_all_reduce.py",
+                    "first_character_index": 1432,
+                    "last_character_index": 3225
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/device_communicators/quick_all_reduce.py",
+                    "first_character_index": 3014,
+                    "last_character_index": 4634
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/envs.py",
+                    "first_character_index": 32176,
+                    "last_character_index": 34118
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/device_communicators/quick_all_reduce.py",
+                    "first_character_index": 6608,
+                    "last_character_index": 8439
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/envs.py",
+                    "first_character_index": 30289,
+                    "last_character_index": 32175
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/device_communicators/quick_all_reduce.py",
+                    "first_character_index": 1062,
+                    "last_character_index": 3013
+                },
+                {
+                    "file_path": "data/raw/vllm-0.10.1/vllm/distributed/device_communicators/custom_all_reduce.py",
+                    "first_character_index": 10262,
+                    "last_character_index": 12032
+                }
+            ],
+            "answer": "The determination of custom allreduce is given by the `enable_fi_allreduce_fusion` setting in the PassConfig class."
+        }
+    ],
+    "k": 10
+}

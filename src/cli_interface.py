@@ -61,14 +61,18 @@ def search_dataset(
     """
     no_answer_q = Loader.load_questions(dataset_path)
     my_questions = Loader.validate_unanswered_q(no_answer_q)
-    max_relevant = to_Bm25.find_k_relevant(my_questions, k)
+
+    max_relevant = to_Bm25.find_k_relevant(my_questions, k=k)
+
     output = {}
     output["search_results"] = []
+
     for i, chunk_id in enumerate(max_relevant):
         k_relevant = chunk_id[0]
         each_q = my_questions[i]
         json_dct = Loader.build_dict(each_q, k_relevant)
         output["search_results"].append(json_dct)
+
     JsonCreator.write_any_json(save_directory, output)
 
 
@@ -83,12 +87,28 @@ def answer(query: str, k: int=3):
 
 def answer_dataset(path_of_questions: str, save_directory: str):
     k = 10 #to see later how much should i set it 
+
     no_answer_q = Loader.load_questions(path_of_questions)
     questions = Loader.validate_unanswered_q(no_answer_q)
+
     my_ai = Ai_work()
     max_relevant = to_Bm25.find_k_relevant(questions, k)
-    answer = my_ai.get_answers(questions, max_relevant)
-    print("SUCESFFUL")
+    answers = my_ai.get_answers(questions, max_relevant)
+
+    # formatting part
+    output = {}
+    output["search_results"] = []
+    output["k"] = k
+
+    for i, chunk_id in enumerate(max_relevant):
+        k_relevant = chunk_id[0]
+        each_q = questions[i]
+        json_dct = Loader.build_dict_answer(each_q, k_relevant, answers[i])
+        output["search_results"].append(json_dct)
+
+    JsonCreator.write_any_json(save_directory, output)
+    print(f"\nResult were saved at '{save_directory}'\n")
+
     # to do the save folder and file verification
 
 
