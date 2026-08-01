@@ -79,6 +79,18 @@ def answer(query: str, k: int=3):
     print()
     print(f"Model Answer: {answer}")
     print()
+    # improve output
+
+def answer_dataset(path_of_questions: str, save_directory: str):
+    k = 10 #to see later how much should i set it 
+    no_answer_q = Loader.load_questions(path_of_questions)
+    questions = Loader.validate_unanswered_q(no_answer_q)
+    my_ai = Ai_work()
+    max_relevant = to_Bm25.find_k_relevant(questions, k)
+    answer = my_ai.get_answers(questions, max_relevant)
+    print("SUCESFFUL")
+    # to do the save folder and file verification
+
 
 
 def main():
@@ -86,21 +98,27 @@ def main():
       'index': index,
       "search": search,
       "search_dataset": search_dataset,
-      "answer": answer
-
+      "answer": answer,
+      "answer_dataset": answer_dataset
   })
+#   to do all the progress bar with tqdm
 
 
 # to try improve perf with some np array
 if __name__ == '__main__':
-    # try:
+    try:
         main()
-    # except FileNotFoundError as e:
-        # print("\n===============")
-        # print("[ERROR]")
-        # print("A required file or folder is missing")
-        # print(f"Missing File or Folder: {e.filename}")
-        # print("Perhaps you forgot to index ?")
-        # print("=================\n")
-    # except BaseException as e:
-        # print(f"An error occured: {e}")
+    except json.JSONDecodeError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print(f"JSON DECODE ERROR OCURED :\n{e}")
+        print("=================\n")
+    except FileNotFoundError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print("A required file or folder is missing")
+        print(f"Missing File or Folder: {e.filename}")
+        print("Perhaps you forgot to index ?")
+        print("=================\n")
+    except BaseException as e:
+        print(f"An error occured: {e}")

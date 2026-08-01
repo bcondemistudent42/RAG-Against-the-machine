@@ -1,0 +1,16 @@
+{
+  "rag_questions": [
+    {
+      "question_id": "189c8b8a-e59c-4fca-92ad-c02df42cbe40",
+      "question": "What activation formats does the fused batched MoE layer return in vLLM?"
+    },
+    {
+      "question_id": "02789461-05fd-435d-9673-91606102d6c9",
+      "question": "What are the default values for FP8_MIN and FP8_MAX constants in vLLM's triton_flash_attention module?"
+    },
+    {
+      "question_id": "e852801e-b909-4360-82ea-cedb2a1be919",
+      "question": "What determines whether vLLM's sampler returns Pythonized results or deferred Pythonization arguments?"
+    }
+  ]
+}
