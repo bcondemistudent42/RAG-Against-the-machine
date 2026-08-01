@@ -92,9 +92,9 @@ def answer_dataset(
 
     k = 10 #to see later how much should i set it 
 
-# tp modify answer datsets
-# a recuperer les k relevant from data/output/search_results_and_answer par defaut sinon
-# en fonction de celui donner
+    # a recuperer les k relevant from data/output/search_results_and_answer par defaut sinon
+    # en fonction de celui donner
+
     path_of_questions ="data/datasets/UnansweredQuestions/dataset_docs_public.json"
     no_answer_q = Loader.load_questions(path_of_questions)
     questions = Loader.validate_unanswered_q(no_answer_q)
