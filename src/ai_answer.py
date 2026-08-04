@@ -26,21 +26,27 @@ class Ai_work:
         )
         dspy.configure(lm=self.lm)
 
-    def get_answers(self, questions: list[UnansweredQuestion], index_of_k):
+    def get_answers(self, index_of_k):
+        sources_data = ""
         output = []
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
-        for i, each_question in enumerate(questions):
-            # print() #to see what format maybe to send all content with a get_content
+        for each_question in index_of_k["search_results"]:
+            for each_source in each_question["retrieved_sources"]:
+                with open(each_source["file_path"]) as f:
+                    test = f.read()
+                    start_index = each_source["first_character_index"]
+                    last_index = each_source["last_character_index"]
+                    sources_data += f"\n {test[start_index:last_index]}"
+            # print()
+            print(each_question["question"])
+            # print()
+            # print(sources_data)
+            # print("+++++++++++++++++++++++++++++++\n")
             result = reasoning_bot(
-            data=self.data_chunked[str(index_of_k[i][0][0])]["content"],
-            question=each_question.question
+            data=sources_data,
+            question=each_question["question"]
             )
             output.append(result.answer)
-            # print("\n=========")
-            # print(each_question.question)
-            # print("________________")
-            # print(result.answer)
-            # print("=========\n")
         return output
 
 

@@ -74,7 +74,9 @@ def search_dataset(
         output["search_results"].append(json_dct)
 
     JsonCreator.write_any_json(save_directory, output)
-
+    print()
+    print(f"Saved results at {save_directory}")
+    print()
 
 def answer(query: str, k: int=3):
     my_ai = Ai_work()
@@ -86,7 +88,7 @@ def answer(query: str, k: int=3):
     # improve output
 
 def answer_dataset(
-    student_search_results_path: str ='data/output/search_results/dataset_docs_public.json',
+    student_search_results_path: str ='data/output/search_results/search_results.json',
     save_directory: str = 'data/output/search_results_and_answer'
     ):
 
@@ -102,8 +104,10 @@ def answer_dataset(
     my_ai = Ai_work()
     # to do with the precedent result saved at 
     # data/output/search_results/UnansweredQuestions/dataset_docs_public.json
-    max_relevant = to_Bm25.find_k_relevant(questions, k)
-    answers = my_ai.get_answers(questions, max_relevant)
+
+    with open(student_search_results_path) as json_file:
+        max_relevant = json.load(json_file)
+    answers = my_ai.get_answers(max_relevant)
 
     # formatting part
     output = {}
@@ -136,19 +140,19 @@ def main():
 
 # to try improve perf with some np array
 if __name__ == '__main__':
-    try:
+    # try:
         main()
-    except json.JSONDecodeError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print(f"JSON DECODE ERROR OCURED :\n{e}")
-        print("=================\n")
-    except FileNotFoundError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print("A required file or folder is missing")
-        print(f"Missing File or Folder: {e.filename}")
-        print("Perhaps you forgot to index ?")
-        print("=================\n")
-    except BaseException as e:
-        print(f"An error occured: {e}")
+    # except json.JSONDecodeError as e:
+        # print("\n===============")
+        # print("[ERROR]")
+        # print(f"JSON DECODE ERROR OCURED :\n{e}")
+        # print("=================\n")
+    # except FileNotFoundError as e:
+        # print("\n===============")
+        # print("[ERROR]")
+        # print("A required file or folder is missing")
+        # print(f"Missing File or Folder: {e.filename}")
+        # print("Perhaps you forgot to index ?")
+        # print("=================\n")
+    # except BaseException as e:
+        # print(f"An error occured: {e}")
