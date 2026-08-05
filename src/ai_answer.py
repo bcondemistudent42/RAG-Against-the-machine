@@ -1,6 +1,6 @@
 import dspy
 import json
-from required_class import UnansweredQuestion
+from .required_class import UnansweredQuestion
 
 # faire une autre classe qui recois une liste de question
 # elle traite ensuite tout les questions une par une et stock
@@ -41,7 +41,7 @@ class Ai_work:
             data=sources_data,
             question=each_question["question"]
             )
-            # print("Question :", each_question["question"])
+            print("Question :", each_question["question"])
             # print("Answer :", result.answer)
             # print("\n================\n")
             output.append(result.answer)

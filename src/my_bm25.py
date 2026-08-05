@@ -1,6 +1,6 @@
 import bm25s
-from required_class import UnansweredQuestion
-from my_enum import FileType
+from .required_class import UnansweredQuestion
+from .my_enum import FileType
 
 
 class to_Bm25:

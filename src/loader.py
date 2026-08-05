@@ -4,7 +4,7 @@ from pathlib import Path
 from dataclasses import dataclass
 from pydantic import ValidationError
 from langchain_core.documents import Document
-from required_class import UnansweredQuestion
+from .required_class import UnansweredQuestion
 
 @dataclass
 class Raw_data:
@@ -65,7 +65,7 @@ class Loader:
         """
         Extract data properly
         """
-        str(chunk_id)
+        chunk_id = str(chunk_id)
         file_path = data_chunked[chunk_id]["file_path"]
         start_idx = data_chunked[chunk_id]["first_character_index"]
         end_idx = data_chunked[chunk_id]["last_character_index"]

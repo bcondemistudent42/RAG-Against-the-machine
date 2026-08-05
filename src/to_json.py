@@ -1,7 +1,7 @@
 import json
-from my_enum import FileType
-from chunker import ChunkedData
-from indexing import OrganisedMetadata
+from .my_enum import FileType
+from .chunker import ChunkedData
+from .indexing import OrganisedMetadata
 
 
 class JsonCreator:

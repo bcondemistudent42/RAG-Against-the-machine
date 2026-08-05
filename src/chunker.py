@@ -1,5 +1,5 @@
-from loader import Raw_data
-from my_enum import FileType
+from .loader import Raw_data
+from .my_enum import FileType
 from dataclasses import dataclass
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter, Language

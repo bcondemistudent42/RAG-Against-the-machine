@@ -1,6 +1,6 @@
-from my_enum import FileType
+from .my_enum import FileType
 from pydantic import BaseModel
-from chunker import ChunkedData
+from .chunker import ChunkedData
 from dataclasses import dataclass
 
 class MinimalSource(BaseModel):
