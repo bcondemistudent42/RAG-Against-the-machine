@@ -37,15 +37,13 @@ class Ai_work:
                     start_index = each_source["first_character_index"]
                     last_index = each_source["last_character_index"]
                     sources_data += f"\n {test[start_index:last_index]}"
-            # print()
-            print(each_question["question"])
-            # print()
-            # print(sources_data)
-            # print("+++++++++++++++++++++++++++++++\n")
             result = reasoning_bot(
             data=sources_data,
             question=each_question["question"]
             )
+            # print("Question :", each_question["question"])
+            # print("Answer :", result.answer)
+            # print("\n================\n")
             output.append(result.answer)
         return output
 
