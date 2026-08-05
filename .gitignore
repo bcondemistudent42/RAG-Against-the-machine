@@ -13,3 +13,5 @@ chunk.json
 from_scratch/
 indexing/
 data/processed/*
+data/output/search_results/*
+data/output/search_results_and_answers/*
