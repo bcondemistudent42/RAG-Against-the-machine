@@ -27,11 +27,11 @@ class Ai_work:
         dspy.configure(lm=self.lm)
 
     def get_answers(self, index_of_k):
-        sources_data = ""
         output = []
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
         for each_question in index_of_k["search_results"]:
             for each_source in each_question["retrieved_sources"]:
+                sources_data = ""
                 with open(each_source["file_path"]) as f:
                     test = f.read()
                     start_index = each_source["first_character_index"]

@@ -53,7 +53,7 @@ def search(query: str, k: int=3): #setting it to 3  for now
 
 def search_dataset(
     dataset_path: str="data/datasets/UnansweredQuestions/dataset_docs_public.json",
-    k: int=10,
+    k: int=4,
     save_directory: str="data/output/search_results/"
     ):
     """
