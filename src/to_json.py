@@ -36,8 +36,8 @@ class JsonCreator:
             f.write(json.dumps(self.big_dict, indent=4))
 
     @staticmethod
-    def write_any_json(directory_to_write: str, the_dict: dict):
-        to_write = f"{directory_to_write}/search_results.json"
+    def write_any_json(directory_to_write: str, the_dict: dict, the_name="search_results.json"):
+        to_write = f"{directory_to_write}/{the_name}"
         # to see how to handle when folder not exist
         # to see with gemini
         try:

@@ -66,6 +66,7 @@ def search_dataset(
 
     output = {}
     output["search_results"] = []
+    output["k"] = k
 
     for i, chunk_id in enumerate(max_relevant):
         k_relevant = chunk_id[0]
@@ -92,11 +93,6 @@ def answer_dataset(
     save_directory: str = 'data/output/search_results_and_answer'
     ):
 
-    k = 10 #to see later how much should i set it 
-
-    # a recuperer les k relevant from data/output/search_results_and_answer par defaut sinon
-    # en fonction de celui donner
-
     path_of_questions ="data/datasets/UnansweredQuestions/dataset_docs_public.json"
     no_answer_q = Loader.load_questions(path_of_questions)
     questions = Loader.validate_unanswered_q(no_answer_q)
@@ -106,21 +102,29 @@ def answer_dataset(
     # data/output/search_results/UnansweredQuestions/dataset_docs_public.json
 
     with open(student_search_results_path) as json_file:
-        max_relevant = json.load(json_file)
-    answers = my_ai.get_answers(max_relevant)
+        sources = json.load(json_file)
+        # to check if it's a correct StudentSearchResults 
+        # with baseModel
+    answers = my_ai.get_answers(sources)
 
     # formatting part
     output = {}
     output["search_results"] = []
-    output["k"] = k
+    output["k"] = sources["k"]
 
-    for i, chunk_id in enumerate(max_relevant):
-        k_relevant = chunk_id[0]
-        each_q = questions[i]
-        json_dct = Loader.build_dict_answer(each_q, k_relevant, answers[i])
-        output["search_results"].append(json_dct)
+    for i, each_question in enumerate(questions):
+        # to send for each:
+        # the question instance
+        # the sources linked
+        # the correct answer
+        little_dct = Loader.build_dict_answer(
+            each_question,
+            sources["search_results"][i]["retrieved_sources"],
+            answers[i]
+        )
+        output["search_results"].append(little_dct)
 
-    JsonCreator.write_any_json(save_directory, output)
+    JsonCreator.write_any_json(save_directory, output, "search_results_and_answer.json")
     print(f"\nResult were saved at '{save_directory}'\n")
 
     # to do the save folder and file verification
@@ -136,6 +140,7 @@ def main():
       "answer_dataset": answer_dataset
   })
 #   to do all the progress bar with tqdm
+# to do the recallok stuff to see later
 
 
 # to try improve perf with some np array

@@ -92,22 +92,11 @@ class Loader:
         return (output)
 
     @staticmethod
-    def build_dict_answer(question, k_relevant, answer):
-        """
-        build a dict that will be append to search_results
-        """
-        with open('data/processed/my_chunk.json') as json_file:
-            data_chunked = json.load(json_file)
+    def build_dict_answer(question, sources, answer):
 
         output = {}
         output["question_id"] = question.question_id
         output["question"] = question.question
-        output["retrieved_sources"] = []
+        output["retrieved_sources"] = sources
         output["answer"] = answer
-        for each_k in k_relevant:
-            little_dct = {}
-            little_dct["file_path"] = data_chunked[str(each_k)]["file_path"]
-            little_dct["first_character_index"] = data_chunked[str(each_k)]["first_character_index"]
-            little_dct["last_character_index"] = data_chunked[str(each_k)]["last_character_index"]
-            output["retrieved_sources"].append(little_dct)
-        return (output)
+        return output
