@@ -1,7 +1,8 @@
 import json
-from .my_enum import FileType
+
 from .chunker import ChunkedData
 from .indexing import OrganisedMetadata
+from .my_enum import FileType
 
 
 class JsonCreator:
@@ -15,9 +16,15 @@ class JsonCreator:
             for j in range(len(getattr(self.chunks, data_type)[i])):
                 temp = {
                     "chunk_idx": chunk_idx,
-                    "file_path": getattr(self.metadata, data_type)[i][j].file_path,
-                    "first_character_index": getattr(self.metadata, data_type)[i][j].first_character_index,
-                    "last_character_index": getattr(self.metadata, data_type)[i][j].last_character_index,
+                    "file_path": getattr(
+                        self.metadata, data_type
+                        )[i][j].file_path,
+                    "first_character_index": getattr(
+                        self.metadata, data_type
+                        )[i][j].first_character_index,
+                    "last_character_index": getattr(
+                        self.metadata, data_type
+                        )[i][j].last_character_index,
                     "content": getattr(self.chunks, data_type)[i][j]
                 }
                 self.big_dict[chunk_idx] = temp
@@ -36,8 +43,12 @@ class JsonCreator:
             f.write(json.dumps(self.big_dict, indent=4))
 
     @staticmethod
-    def write_any_json(directory_to_write: str, the_dict: dict, the_name="search_results.json"):
-        to_write = f"{directory_to_write}/{the_name}"
+    def write_any_json(
+        dir_to_write: str,
+        the_dict: dict,
+        the_name="search_results.json"
+    ):
+        to_write = f"{dir_to_write}/{the_name}"
         # to see how to handle when folder not exist
         # to see with gemini
         try:
@@ -45,5 +56,5 @@ class JsonCreator:
                 f.write(json.dumps(the_dict, indent=4))
         except Exception as e:
             raise ValueError(
-                f'Error occurred while saving JSON to {directory_to_write}: {e}'
+                f'Error occurred while saving JSON to {dir_to_write}: {e}'
             )

@@ -1,8 +1,10 @@
+from dataclasses import dataclass
+
+from langchain_core.documents import Document
+from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
+
 from .loader import Raw_data
 from .my_enum import FileType
-from dataclasses import dataclass
-from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter, Language
 
 
 @dataclass
@@ -12,7 +14,7 @@ class ChunkedData:
     txt: list[Document]
 
 
-class Chunker():
+class Chunker:
     def __init__(self, raw_data: Raw_data, chunk_size: int):
         self.raw_data = raw_data
         self.chunk_size = chunk_size
@@ -21,19 +23,19 @@ class Chunker():
         if doc_type == FileType.PY:
             multi_splitter = RecursiveCharacterTextSplitter.from_language(
                 chunk_size=self.chunk_size,
-                chunk_overlap=0, #setting it to 0 to see later
+                chunk_overlap=0,  # setting it to 0 to see later
                 language=Language.PYTHON
             )
         elif doc_type == FileType.MD:
             multi_splitter = RecursiveCharacterTextSplitter.from_language(
                 chunk_size=self.chunk_size,
-                chunk_overlap=0, #setting it to 0 to see later
+                chunk_overlap=0,  # setting it to 0 to see later
                 language=Language.MARKDOWN
             )
         else:
             multi_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=self.chunk_size,
-                chunk_overlap=0 #setting it to 0 to see later
+                chunk_overlap=0  # setting it to 0 to see later
             )
 
         chunk = [multi_splitter.split_text(x.page_content) for x in typed_data]
@@ -45,7 +47,9 @@ class Chunker():
         metadata_srcs = {}
         for each_type in FileType:
             each_type = str(each_type)
-            output[each_type], temp_meta = self.splitter(getattr(self.raw_data, each_type), each_type)
+            output[each_type], temp_meta = self.splitter(
+                getattr(self.raw_data, each_type), each_type
+            )
             metadata_srcs[each_type] = []
             metadata_srcs[each_type].append(temp_meta)
         return (ChunkedData(**output), metadata_srcs)

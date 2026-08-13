@@ -1,7 +1,8 @@
-import dspy
 import json
-from .required_class import UnansweredQuestion
-from tqdm import tqdm 
+
+import dspy
+from tqdm import tqdm
+
 
 # faire une autre classe qui recois une liste de question
 # elle traite ensuite tout les questions une par une et stock
@@ -14,10 +15,10 @@ class AnswerBot(dspy.Signature):
     data: str = dspy.InputField(desc="Data linked to the question.")
     answer: str = dspy.OutputField()
 
+
 class Ai_work:
     def __init__(self):
-        # to make dynamic later to see
-        with open('data/processed/my_chunk.json') as json_file: #to adapt later
+        with open('data/processed/my_chunk.json') as json_file:
             data_chunked = json.load(json_file)
         self.data_chunked = data_chunked
         self.lm = dspy.LM(
@@ -26,7 +27,6 @@ class Ai_work:
             api_key="_"
         )
         dspy.configure(lm=self.lm)
-
 
     def get_answers(self, index_of_k):
         output = []
@@ -45,22 +45,19 @@ class Ai_work:
                         last_index = each_source["last_character_index"]
                         sources_data += f"\n {test[start_index:last_index]}"
                 result = reasoning_bot(
-                data=sources_data,
-                question=each_question["question"]
+                    data=sources_data,
+                    question=each_question["question"]
                 )
                 pbar.update(1)
             # print("Question :", each_question["question"])
             # print("Answer :", result.answer)
-            # print("\n================\n")
             output.append(result.answer)
         return output
-
-
 
     def get_one_answer(self, question: str, index_of_k):
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
         result = reasoning_bot(
-        data=self.data_chunked[str(index_of_k[0][0][0])]["content"],
-        question=question
+            data=self.data_chunked[str(index_of_k[0][0][0])]["content"],
+            question=question
         )
         return (result.answer)

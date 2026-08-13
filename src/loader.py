@@ -1,10 +1,12 @@
 import json
-from typing import Any
-from pathlib import Path
 from dataclasses import dataclass
-from pydantic import ValidationError
+from pathlib import Path
+from typing import Any
+
 from langchain_core.documents import Document
+
 from .required_class import UnansweredQuestion
+
 
 @dataclass
 class Raw_data:
@@ -40,18 +42,19 @@ class Loader:
 
     @staticmethod
     def load_questions(dataset_path: str) -> list[dict[str, Any]]:
+        error = "Invalid dataset format: questions must be a non empty list"
         path = Path(dataset_path)
         raw = path.read_text()
         all_questions = json.loads(raw)
         questions = all_questions.get("rag_questions", [])
         if not isinstance(questions, list) or len(questions) == 0:
-            raise ValueError(
-                "Invalid dataset format: rag_questions must be a non empty list"
-            )
+            raise ValueError(error)
         return list(questions)
 
     @staticmethod
-    def validate_unanswered_q(questions: list[dict[str, Any]]) -> list[UnansweredQuestion]:
+    def validate_unanswered_q(
+        questions: list[dict[str, Any]]
+    ) -> list[UnansweredQuestion]:
         output = []
         for each_question in questions:
             temp = UnansweredQuestion(
@@ -80,14 +83,16 @@ class Loader:
             data_chunked = json.load(json_file)
 
         output = {}
+        fci = "first_character_index"
+        lci = "last_character_index"
         output["question_id"] = question.question_id
         output["question"] = question.question
         output["retrieved_sources"] = []
         for each_k in k_relevant:
             little_dct = {}
             little_dct["file_path"] = data_chunked[str(each_k)]["file_path"]
-            little_dct["first_character_index"] = data_chunked[str(each_k)]["first_character_index"]
-            little_dct["last_character_index"] = data_chunked[str(each_k)]["last_character_index"]
+            little_dct[fci] = data_chunked[str(each_k)][fci]
+            little_dct[lci] = data_chunked[str(each_k)][lci]
             output["retrieved_sources"].append(little_dct)
         return (output)
 

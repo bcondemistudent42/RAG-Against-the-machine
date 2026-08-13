@@ -1,12 +1,14 @@
+import json
+
 import fire
+from tqdm import tqdm
+
+from .ai_answer import Ai_work
+from .chunker import Chunker
+from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
-from .indexing import Indexer
 from .to_json import JsonCreator
-from .chunker import Chunker, ChunkedData
-from .ai_answer import Ai_work
-import json
-from tqdm import tqdm
 
 # index –max_chunk_size <int>
 # Ingest data/raw/ and build the index under data/processed/.
@@ -33,34 +35,38 @@ def index(chunk_size: int = 2000):
 
 
 def search(query: str, k: int = 3):  # setting it to 3  for now
+    # to protect max and min k
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
     with open("data/processed/my_chunk.json") as json_file:
         data_chunked = json.load(json_file)
     cleaned_relevant = max_relevant[0][0]
-    
+
     iterable = cleaned_relevant
     output = ""
 
     with tqdm(total=len(iterable)) as pbar:
-        for i, chunk_id in (enumerate(iterable)):
-            file_path, start_idx, end_idx = Loader.data_from_relevant(
+        for i, chunk_id in enumerate(iterable):
+            fp, s_idx, end_idx = Loader.data_from_relevant(
                 data_chunked, chunk_id
             )
-            output += f"File rank: {i} File path: {file_path} {start_idx} {end_idx}\n"
+            output += f"File rank: {i} File path: {fp} {s_idx} {end_idx}\n"
             pbar.update(1)
     print(f"\nTop k = {k} result:")
     print(output)
-        # to upgrade the output to be better
+    # to upgrade the output to be better
 
 
 def search_dataset(
-    dataset_path: str = "data/datasets/UnansweredQuestions/dataset_code_public.json",
+    dataset_path: str
+    = "data/datasets/UnansweredQuestions/dataset_code_public.json",
     k: int = 5,
     save_directory: str = "data/output/search_results/",
 ):
     """
     Run search over a whole dataset and write a StudentSearchResults JSON file.
     """
+
+    # to protect max and min k
     no_answer_q = Loader.load_questions(dataset_path)
     my_questions = Loader.validate_unanswered_q(no_answer_q)
 
@@ -98,11 +104,14 @@ def answer(query: str, k: int = 5):
 
 
 def answer_dataset(
-    student_search_results_path: str = "data/output/search_results/search_results.json",
+    student_search_results_path: str
+    = "data/output/search_results/search_results.json",
     save_directory: str = "data/output/search_results_and_answer",
 ):
 
-    path_of_questions = "data/datasets/UnansweredQuestions/dataset_docs_public.json"
+    path_of_questions = (
+        "data/datasets/UnansweredQuestions/dataset_docs_public.json"
+    )
     no_answer_q = Loader.load_questions(path_of_questions)
     questions = Loader.validate_unanswered_q(no_answer_q)
 
@@ -121,15 +130,19 @@ def answer_dataset(
     output["search_results"] = []
     output["k"] = sources["k"]
 
-# to tqdm later can't test now
-# to test at home if quick or no
+    # to tqdm later can't test now
+    # to test at home if quick or no
     for i, each_question in enumerate(questions):
         little_dct = Loader.build_dict_answer(
-            each_question, sources["search_results"][i]["retrieved_sources"], answers[i]
+            each_question,
+            sources["search_results"][i]["retrieved_sources"],
+            answers[i],
         )
         output["search_results"].append(little_dct)
 
-    JsonCreator.write_any_json(save_directory, output, "search_results_and_answer.json")
+    JsonCreator.write_any_json(
+        save_directory, output, "search_results_and_answer.json"
+    )
     print(f"\nResult were saved at '{save_directory}'\n")
 
 
