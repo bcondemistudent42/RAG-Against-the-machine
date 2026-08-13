@@ -6,6 +6,7 @@ from .to_json import JsonCreator
 from .chunker import Chunker, ChunkedData
 from .ai_answer import Ai_work
 import json
+from tqdm import tqdm
 
 # index –max_chunk_size <int>
 # Ingest data/raw/ and build the index under data/processed/.
@@ -36,14 +37,20 @@ def search(query: str, k: int = 3):  # setting it to 3  for now
     with open("data/processed/my_chunk.json") as json_file:
         data_chunked = json.load(json_file)
     cleaned_relevant = max_relevant[0][0]
+    
+    iterable = cleaned_relevant
+    output = ""
+
+    with tqdm(total=len(iterable)) as pbar:
+        for i, chunk_id in (enumerate(iterable)):
+            file_path, start_idx, end_idx = Loader.data_from_relevant(
+                data_chunked, chunk_id
+            )
+            output += f"File rank: {i} File path: {file_path} {start_idx} {end_idx}\n"
+            pbar.update(1)
     print(f"\nTop k = {k} result:")
-    for i, chunk_id in enumerate(cleaned_relevant):
-        file_path, start_idx, end_idx = Loader.data_from_relevant(
-            data_chunked, chunk_id
-        )
-        print(f"File rank: {i} File path: {file_path} {start_idx} {end_idx}")
+    print(output)
         # to upgrade the output to be better
-    print()
 
 
 def search_dataset(
@@ -63,11 +70,15 @@ def search_dataset(
     output["search_results"] = []
     output["k"] = k
 
-    for i, chunk_id in enumerate(max_relevant):
-        k_relevant = chunk_id[0]
-        each_q = my_questions[i]
-        json_dct = Loader.build_dict(each_q, k_relevant)
-        output["search_results"].append(json_dct)
+    iterable = max_relevant
+
+    with tqdm(total=len(iterable)) as pbar:
+        for i, chunk_id in enumerate(iterable):
+            k_relevant = chunk_id[0]
+            each_q = my_questions[i]
+            json_dct = Loader.build_dict(each_q, k_relevant)
+            output["search_results"].append(json_dct)
+            pbar.update(1)
 
     JsonCreator.write_any_json(save_directory, output)
     print()
