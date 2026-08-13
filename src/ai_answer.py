@@ -28,6 +28,7 @@ class Ai_work:
 
     def get_answers(self, index_of_k):
         output = []
+        # to do later can't test now tqdm
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
         for each_question in index_of_k["search_results"]:
             for each_source in each_question["retrieved_sources"]:
