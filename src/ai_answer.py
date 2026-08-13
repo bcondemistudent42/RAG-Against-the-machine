@@ -1,6 +1,7 @@
 import dspy
 import json
 from .required_class import UnansweredQuestion
+from tqdm import tqdm 
 
 # faire une autre classe qui recois une liste de question
 # elle traite ensuite tout les questions une par une et stock
@@ -26,23 +27,29 @@ class Ai_work:
         )
         dspy.configure(lm=self.lm)
 
+
     def get_answers(self, index_of_k):
         output = []
         # to do later can't test now tqdm
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
-        for each_question in index_of_k["search_results"]:
-            for each_source in each_question["retrieved_sources"]:
-                sources_data = ""
-                with open(each_source["file_path"]) as f:
-                    test = f.read()
-                    start_index = each_source["first_character_index"]
-                    last_index = each_source["last_character_index"]
-                    sources_data += f"\n {test[start_index:last_index]}"
-            result = reasoning_bot(
-            data=sources_data,
-            question=each_question["question"]
-            )
-            print("Question :", each_question["question"])
+
+        iterable = index_of_k["search_results"]
+
+        with tqdm(total=len(iterable)) as pbar:
+            for each_question in iterable:
+                for each_source in each_question["retrieved_sources"]:
+                    sources_data = ""
+                    with open(each_source["file_path"]) as f:
+                        test = f.read()
+                        start_index = each_source["first_character_index"]
+                        last_index = each_source["last_character_index"]
+                        sources_data += f"\n {test[start_index:last_index]}"
+                result = reasoning_bot(
+                data=sources_data,
+                question=each_question["question"]
+                )
+                pbar.update(1)
+            # print("Question :", each_question["question"])
             # print("Answer :", result.answer)
             # print("\n================\n")
             output.append(result.answer)

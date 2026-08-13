@@ -88,6 +88,7 @@ def search_dataset(
 
 def answer(query: str, k: int = 5):
     my_ai = Ai_work()
+    # maybe to open before the search result. to see if relevant
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
     answer = my_ai.get_one_answer(query, max_relevant)
     print()
@@ -121,6 +122,7 @@ def answer_dataset(
     output["k"] = sources["k"]
 
 # to tqdm later can't test now
+# to test at home if quick or no
     for i, each_question in enumerate(questions):
         little_dct = Loader.build_dict_answer(
             each_question, sources["search_results"][i]["retrieved_sources"], answers[i]
