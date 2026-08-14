@@ -15,7 +15,7 @@ def search(query: str, k: int = 3):  # setting it to 3  for now
         docs.append(each_chunk["content"])
         ids.append(str(each_chunk["chunk_idx"]))
 
-    chroma_client = chromadb.Client()
+    chroma_client = chromadb.PersistentClient(path="chroma_cache")
     collection = chroma_client.get_or_create_collection(name="my_collection")
     collection.upsert(
         documents=docs, ids=ids
@@ -27,4 +27,4 @@ def search(query: str, k: int = 3):  # setting it to 3  for now
     print(results)
 
 
-search("what is vllm")
+search("who created the program vllm")

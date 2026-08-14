@@ -8,10 +8,8 @@ from .chunker import Chunker
 from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
+from .required_class import DictChunk
 from .to_json import JsonCreator
-
-# index –max_chunk_size <int>
-# Ingest data/raw/ and build the index under data/processed/.
 
 
 def index(chunk_size: int = 2000):
@@ -36,9 +34,16 @@ def index(chunk_size: int = 2000):
 
 def search(query: str, k: int = 3):  # setting it to 3  for now
     # to protect max and min k
+
+    if k < 1 or k > 10:
+        raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
     with open("data/processed/my_chunk.json") as json_file:
         data_chunked = json.load(json_file)
+        DictChunk.validate(data_chunked)
+
+    # To handle this properly with pydantic
+
     cleaned_relevant = max_relevant[0][0]
 
     iterable = cleaned_relevant
@@ -49,7 +54,7 @@ def search(query: str, k: int = 3):  # setting it to 3  for now
             fp, s_idx, end_idx = Loader.data_from_relevant(
                 data_chunked, chunk_id
             )
-            output += f"File rank: {i} File path: {fp} {s_idx} {end_idx}\n"
+            output += f"File rank: {i + 1} File path: {fp} {s_idx} {end_idx}\n"
             pbar.update(1)
     print(f"\nTop k = {k} result:")
     print(output)
@@ -158,11 +163,10 @@ def main():
     )
 
 
-#   to do all the progress bar with tqdm
 # to do the recallok stuff to see later
-# before taking any data fron json check structure with pydantic
 # to do the evaluate stuff dont know how it works yet
-
+# before taking any data fron json check structure with pydantic
+# to implement the rff ranking with chomadb
 
 # to try improve perf with some np array
 if __name__ == "__main__":
@@ -179,6 +183,11 @@ if __name__ == "__main__":
         print("A required file or folder is missing")
         print(f"Missing File or Folder: {e.filename}")
         print("Perhaps you forgot to index ?")
+        print("=================\n")
+    except ValueError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print(f"A given value is incorrect: {e}")
         print("=================\n")
     except BaseException as e:
         print(f"An error occured: {e}")

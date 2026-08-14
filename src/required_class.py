@@ -40,3 +40,16 @@ class StudentSearchResults(BaseModel):
 
 class StudentSearchResultsAndAnswer(StudentSearchResults):
     search_results: list[MinimalAnswer]
+
+
+class OneChunk(BaseModel):
+    content: str
+    file_path: str
+    chunk_idx: int
+    last_character_index: int
+    first_character_index: int
+
+
+class DictChunk(OneChunk):
+    dct: dict[int, OneChunk]
+# here problem to fix
