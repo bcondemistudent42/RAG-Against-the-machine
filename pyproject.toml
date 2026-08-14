@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "bm25s>=0.3.9",
+    "chromadb>=1.5.9",
     "dspy>=3.2.1",
     "fire>=0.7.1",
     "langchain-community>=0.4.2",
