@@ -5,7 +5,7 @@ from typing import Any
 
 from langchain_core.documents import Document
 
-from .required_class import UnansweredQuestion
+from .required_class import RagQuestionsLst, UnansweredQuestion
 
 
 @dataclass
@@ -46,6 +46,7 @@ class Loader:
         path = Path(dataset_path)
         raw = path.read_text()
         all_questions = json.loads(raw)
+        RagQuestionsLst.model_validate(all_questions)
         questions = all_questions.get("rag_questions", [])
         if not isinstance(questions, list) or len(questions) == 0:
             raise ValueError(error)

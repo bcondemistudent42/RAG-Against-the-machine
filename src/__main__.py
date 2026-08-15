@@ -9,7 +9,7 @@ from .chunker import Chunker
 from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
-from .required_class import OneChunk
+from .required_class import ChunksLst
 from .to_json import JsonCreator
 
 
@@ -34,20 +34,15 @@ def index(chunk_size: int = 2000):
 
 
 def search(query: str, k: int = 3):  # setting it to 3  for now
-    # to protect max and min k
 
     if k < 1 or k > 10:
         raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
     with open("data/processed/my_chunk.json") as json_file:
         data_chunked = json.load(json_file)
-        for check_chunk in data_chunked:
-            OneChunk.validate(data_chunked[check_chunk])
+        ChunksLst.validate(data_chunked)
 
-    # To handle this properly with pydantic
-
-    cleaned_relevant = max_relevant[0][0]
-
+    cleaned_relevant = max_relevant[0][0] 
     iterable = cleaned_relevant
     output = ""
 
@@ -73,7 +68,9 @@ def search_dataset(
     Run search over a whole dataset and write a StudentSearchResults JSON file.
     """
 
-    # to protect max and min k
+    if k < 1 or k > 10:
+        raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
+
     no_answer_q = Loader.load_questions(dataset_path)
     my_questions = Loader.validate_unanswered_q(no_answer_q)
 
@@ -100,6 +97,10 @@ def search_dataset(
 
 
 def answer(query: str, k: int = 5):
+
+    if k < 1 or k > 10:
+        raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
+
     my_ai = Ai_work()
     # maybe to open before the search result. to see if relevant
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
@@ -115,7 +116,7 @@ def answer_dataset(
     = "data/output/search_results/search_results.json",
     save_directory: str = "data/output/search_results_and_answer",
 ):
-
+# to protect all input from function call
     path_of_questions = (
         "data/datasets/UnansweredQuestions/dataset_docs_public.json"
     )

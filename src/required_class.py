@@ -1,6 +1,6 @@
 import uuid
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 
 
 class MinimalSource(BaseModel):
@@ -48,3 +48,15 @@ class OneChunk(BaseModel):
     chunk_idx: int = Field(ge=0)
     last_character_index: int = Field(ge=0)
     first_character_index: int = Field(ge=0)
+
+
+class ChunksLst(RootModel):
+    root: dict[str, OneChunk]
+
+class RagQuestion(BaseModel):
+    question_id: str
+    question: str
+
+
+class RagQuestionsLst(BaseModel):
+    rag_questions: list[RagQuestion]
