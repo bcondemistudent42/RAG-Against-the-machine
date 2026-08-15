@@ -1,6 +1,6 @@
 import uuid
 
-from pydantic import BaseModel, Field, RootModel
+from pydantic import BaseModel, ConfigDict, Field, RootModel
 
 
 class MinimalSource(BaseModel):
@@ -43,6 +43,7 @@ class StudentSearchResultsAndAnswer(StudentSearchResults):
 
 
 class OneChunk(BaseModel):
+    model_config = ConfigDict(extra='forbid')
     content: str
     file_path: str
     chunk_idx: int = Field(ge=0)
@@ -54,9 +55,11 @@ class ChunksLst(RootModel):
     root: dict[str, OneChunk]
 
 class RagQuestion(BaseModel):
+    model_config = ConfigDict(extra='forbid')
     question_id: str
     question: str
 
 
 class RagQuestionsLst(BaseModel):
+    model_config = ConfigDict(extra='forbid')
     rag_questions: list[RagQuestion]

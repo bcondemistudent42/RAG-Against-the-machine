@@ -170,6 +170,7 @@ def main():
 # to do the evaluate stuff dont know how it works yet
 # before taking any data fron json check structure with pydantic
 # to implement the rff ranking with chomadb
+# to do the cache upgrade
 
 # to try improve perf with some np array
 if __name__ == "__main__":
