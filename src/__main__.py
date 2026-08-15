@@ -1,6 +1,7 @@
 import json
 
 import fire
+from pydantic import ValidationError
 from tqdm import tqdm
 
 from .ai_answer import Ai_work
@@ -8,7 +9,7 @@ from .chunker import Chunker
 from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
-from .required_class import DictChunk
+from .required_class import OneChunk
 from .to_json import JsonCreator
 
 
@@ -40,7 +41,8 @@ def search(query: str, k: int = 3):  # setting it to 3  for now
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
     with open("data/processed/my_chunk.json") as json_file:
         data_chunked = json.load(json_file)
-        DictChunk.validate(data_chunked)
+        for check_chunk in data_chunked:
+            OneChunk.validate(data_chunked[check_chunk])
 
     # To handle this properly with pydantic
 
@@ -184,10 +186,25 @@ if __name__ == "__main__":
         print(f"Missing File or Folder: {e.filename}")
         print("Perhaps you forgot to index ?")
         print("=================\n")
+    except ValidationError as e:
+        print("\n===============")
+        print("[PYDANTIC VALIDATION ERROR] :")
+        print("Hint from Pydantic")
+        print(f"{e.errors()[0]['msg']}")
+        print(f"{e.errors()[0]['type']}")
+        print(f"{e.errors()[0]['loc']}")
+        print("=================\n")
     except ValueError as e:
         print("\n===============")
         print("[ERROR]")
-        print(f"A given value is incorrect: {e}")
+        print(f"A given value is missing or incorrect: {e}")
         print("=================\n")
     except BaseException as e:
         print(f"An error occured: {e}")
+
+
+
+        # for error in e.errors():
+            # field_name = error['loc'][-1]
+            # msg = error['msg'].replace("Value error, ", "")
+            # print(f"Error on field '{field_name}': {msg}")
