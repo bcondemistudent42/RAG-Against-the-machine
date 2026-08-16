@@ -16,3 +16,5 @@ data/processed/*
 data/output/search_results/*
 data/output/search_results_and_answers/*
 chroma_cache/
+data/output/search_results/*
+data/output/search_results_and_answers/*
