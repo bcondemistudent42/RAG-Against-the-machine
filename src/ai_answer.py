@@ -30,12 +30,11 @@ class Ai_work:
 
     def get_answers(self, index_of_k):
         output = []
-        # to do later can't test now tqdm
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
 
         iterable = index_of_k["search_results"]
 
-        with tqdm(total=len(iterable)) as pbar:
+        with tqdm(total=len(iterable), desc="Generating Answer with VLLM") as pbar:
             for each_question in iterable:
                 for each_source in each_question["retrieved_sources"]:
                     sources_data = ""
@@ -49,8 +48,6 @@ class Ai_work:
                     question=each_question["question"]
                 )
                 pbar.update(1)
-            # print("Question :", each_question["question"])
-            # print("Answer :", result.answer)
             output.append(result.answer)
         return output
 

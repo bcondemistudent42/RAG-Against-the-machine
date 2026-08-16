@@ -1,6 +1,9 @@
+import json
 from dataclasses import dataclass
 
+import chromadb
 from pydantic import BaseModel
+from tqdm import tqdm
 
 from .chunker import ChunkedData
 from .my_enum import FileType
@@ -59,3 +62,35 @@ class Indexer:
                 prev_len += actual_len + 1
             output.append(all_file_metadata)
         return output
+
+    @staticmethod
+    def my_split(arr, size):
+        arrs = []
+        while len(arr) > size:
+            pice = arr[:size]
+            arrs.append(pice)
+            arr   = arr[size:]
+        arrs.append(arr)
+        return arrs
+
+    @staticmethod
+    def embedding():
+        docs = []
+        ids = []
+
+        with open("data/processed/my_chunk.json") as json_file:
+            data_chunked = json.load(json_file)
+
+        for each_chunk in data_chunked.values():
+            docs.append(each_chunk["content"])
+            ids.append(str(each_chunk["chunk_idx"]))
+
+        docs_clean = Indexer.my_split(docs, 128)
+        ids_clean = Indexer.my_split(ids, 128)
+        chroma_client = chromadb.PersistentClient(path="chroma_cache")
+        collection = chroma_client.get_or_create_collection(name="my_collection")
+
+        for i in tqdm(range(len(docs_clean)), desc="Embedding Chroma DB"):
+            collection.add(
+            documents=docs_clean[i], ids=ids_clean[i]
+        )

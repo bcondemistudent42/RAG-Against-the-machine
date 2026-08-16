@@ -1,30 +1,20 @@
-import json
 
-import chromadb
+
+
 
 
 def search(query: str, k: int = 3):  # setting it to 3  for now
 
-    docs = []
-    ids = []
 
-    with open("data/processed/my_chunk.json") as json_file:
-        data_chunked = json.load(json_file)
+# to do in the index part
 
-    for each_chunk in data_chunked.values():
-        docs.append(each_chunk["content"])
-        ids.append(str(each_chunk["chunk_idx"]))
 
-    chroma_client = chromadb.PersistentClient(path="chroma_cache")
-    collection = chroma_client.get_or_create_collection(name="my_collection")
-    collection.upsert(
-        documents=docs, ids=ids
-    )
+    # to in the search
     results = collection.query(
         query_texts=[query],
         n_results=k
     )
-    print(results)
+    print(results.keys())
 
 
 search("who created the program vllm")

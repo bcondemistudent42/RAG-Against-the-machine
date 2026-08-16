@@ -1,6 +1,8 @@
 import bm25s
-from .required_class import UnansweredQuestion
+from tqdm import tqdm
+
 from .my_enum import FileType
+from .required_class import UnansweredQuestion
 
 
 class to_Bm25:
@@ -27,7 +29,7 @@ class to_Bm25:
     def find_k_relevant(questions: list[UnansweredQuestion], k: int):
         search_k_retreiver = bm25s.BM25.load("data/processed/bm25_index")
         output = []
-        for each_question in questions:
+        for each_question in tqdm(questions, desc=f"Finding {k} relevant with bm25"):
             query_tokens = bm25s.tokenize([each_question.question])
             docs, _ = search_k_retreiver.retrieve(query_tokens, k=k)
             output.append(docs.tolist())
