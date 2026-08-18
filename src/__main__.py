@@ -45,7 +45,7 @@ def search(query: str, k: int = 5):
         n_results=k
     )
 
-    k_chroma = [int(x) for x in results["ids"][0]]
+    format_result = results["ids"][0]
 
     if k < 1 or k > 10:
         raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
@@ -55,27 +55,28 @@ def search(query: str, k: int = 5):
         ChunksLst.model_validate(data_chunked)
 
     cleaned_relevant = max_relevant[0][0] 
-    output = ""
+    output = []
 
-    ranking_fusion = Rrf(cleaned_relevant, k_chroma)
+    ranking_fusion = Rrf(cleaned_relevant, format_result)
     iterable = ranking_fusion.output_rff()
-    iterable = iterable[0:len(iterable) // 2]
 
     with tqdm(total=len(iterable), desc="Getting Data") as pbar:
         for i, chunk_id in enumerate(iterable):
             fp, s_idx, end_idx = Loader.data_from_relevant(
                 data_chunked, chunk_id
             )
-            output += f"File rank: {i + 1} File path: {fp} {s_idx} {end_idx}\n"
+            output.append(f"File rank: {i + 1} File path: {fp} {s_idx} {end_idx}\n")
             pbar.update(1)
     print(f"\nTop k = {k} result:")
-    print(output)
+    print()
+    for i in range(k):
+        print(output[i])
     # to upgrade the output to be better
 
 
 def search_dataset(
     dataset_path: str
-    = "data/datasets/UnansweredQuestions/dataset_code_public.json",
+    = "data/datasets/UnansweredQuestions/dataset_docs_public.json",
     k: int = 10,
     save_directory: str = "data/output/search_results/",
 ):
@@ -88,6 +89,15 @@ def search_dataset(
 
     no_answer_q = Loader.load_questions(dataset_path)
     my_questions = Loader.validate_unanswered_q(no_answer_q)
+
+    chroma_q = [str(x.question) for x in my_questions]
+
+    chroma_client = chromadb.PersistentClient(path="chroma_cache")
+    collection = chroma_client.get_or_create_collection(name="my_collection")
+    results = collection.query(
+        query_texts=chroma_q,
+        n_results=k
+    )
 
     max_relevant = to_Bm25.find_k_relevant(my_questions, k=k)
 
@@ -180,32 +190,32 @@ def main():
 # to try improve perf with some np array
 
 if __name__ == "__main__":
-    try:
+    # try:
         main()
-    except json.JSONDecodeError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print(f"JSON DECODE ERROR OCURED :\n{e}")
-        print("=================\n")
-    except FileNotFoundError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print("A required file or folder is missing")
-        print(f"Missing File or Folder: {e.filename}")
-        print("Perhaps you forgot to index ?")
-        print("=================\n")
-    except ValidationError as e:
-        print("\n===============")
-        print("[PYDANTIC VALIDATION ERROR] :")
-        print("Hint from Pydantic")
-        print(f"{e.errors()[0]['msg']}")
-        print(f"{e.errors()[0]['type']}")
-        print(f"{e.errors()[0]['loc']}")
-        print("=================\n")
-    except ValueError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print(f"A given value is missing or incorrect: {e}")
-        print("=================\n")
-    except BaseException as e:
-        print(f"An error occured: {e}")
+    # except json.JSONDecodeError as e:
+    #     print("\n===============")
+    #     print("[ERROR]")
+    #     print(f"JSON DECODE ERROR OCURED :\n{e}")
+    #     print("=================\n")
+    # except FileNotFoundError as e:
+    #     print("\n===============")
+    #     print("[ERROR]")
+    #     print("A required file or folder is missing")
+    #     print(f"Missing File or Folder: {e.filename}")
+    #     print("Perhaps you forgot to index ?")
+    #     print("=================\n")
+    # except ValidationError as e:
+    #     print("\n===============")
+    #     print("[PYDANTIC VALIDATION ERROR] :")
+    #     print("Hint from Pydantic")
+    #     print(f"{e.errors()[0]['msg']}")
+    #     print(f"{e.errors()[0]['type']}")
+    #     print(f"{e.errors()[0]['loc']}")
+    #     print("=================\n")
+    # except ValueError as e:
+    #     print("\n===============")
+    #     print("[ERROR]")
+    #     print(f"A given value is missing or incorrect: {e}")
+    #     print("=================\n")
+    # except BaseException as e:
+    #     print(f"An error occured: {e}")
