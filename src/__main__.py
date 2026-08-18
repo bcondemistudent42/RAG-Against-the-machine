@@ -1,5 +1,6 @@
 import json
 
+import chromadb
 import fire
 from pydantic import ValidationError
 from tqdm import tqdm
@@ -10,6 +11,7 @@ from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
 from .required_class import ChunksLst, StudentSearchResults
+from .rrf import Rrf
 from .to_json import JsonCreator
 
 
@@ -34,18 +36,30 @@ def index(chunk_size: int = 2000):
     Indexer.embedding()
 
 
-def search(query: str, k: int = 3):
+def search(query: str, k: int = 5):
+
+    chroma_client = chromadb.PersistentClient(path="chroma_cache")
+    collection = chroma_client.get_or_create_collection(name="my_collection")
+    results = collection.query(
+        query_texts=[query],
+        n_results=k
+    )
+
+    k_chroma = [int(x) for x in results["ids"][0]]
 
     if k < 1 or k > 10:
         raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
     with open("data/processed/my_chunk.json") as json_file:
         data_chunked = json.load(json_file)
-        ChunksLst.validate(data_chunked)
+        ChunksLst.model_validate(data_chunked)
 
     cleaned_relevant = max_relevant[0][0] 
-    iterable = cleaned_relevant
     output = ""
+
+    ranking_fusion = Rrf(cleaned_relevant, k_chroma)
+    iterable = ranking_fusion.output_rff()
+    iterable = iterable[0:len(iterable) // 2]
 
     with tqdm(total=len(iterable), desc="Getting Data") as pbar:
         for i, chunk_id in enumerate(iterable):
@@ -159,10 +173,10 @@ def main():
         }
     )
 
+# to implement the rff ranking with chomadb
 
 # to do the recallok stuff to see later
 # to do the evaluate stuff dont know how it works yet
-# to implement the rff ranking with chomadb
 # to try improve perf with some np array
 
 if __name__ == "__main__":
