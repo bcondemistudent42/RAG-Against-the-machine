@@ -1,7 +1,10 @@
+from collections import OrderedDict
+
+
 class Rrf:
     def __init__(self, bm25_results: list[int], embedding_results: list[int]):
-        self.bm_rslt = bm25_results
-        self.chroma_rslt = embedding_results
+        self.bm_rslt = [int(x) for x in bm25_results]
+        self.chroma_rslt = [int(x) for x in embedding_results]
 
     @staticmethod
     def get_score(rank: int):
@@ -11,12 +14,19 @@ class Rrf:
     def output_rff(self):
         scores = {}
         for i, elt in enumerate(self.bm_rslt):
-            scores[elt] = self.get_score(i + 1)
+            if elt not in scores:
+                scores[elt] = self.get_score(i + 1)
+            else:
+                scores[elt] = self.get_score(i + 1)
         for i, elt in enumerate(self.chroma_rslt):
-            scores[elt] = self.get_score(i + 1)
+            if elt not in scores:
+                scores[elt] = self.get_score(i + 1)
+            else:
+                scores[elt] = self.get_score(i + 1)
+
         output = [
             x[0] for x in sorted(scores.items(),
             key=lambda x: x[1],
             reverse=True)
             ]
-        return output
+        return list(OrderedDict.fromkeys(output))
