@@ -11,7 +11,7 @@ from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
 from .required_class import ChunksLst, StudentSearchResults
-from .rrf import Rrf
+from .rrf import Rrf_simple_search
 from .to_json import JsonCreator
 
 
@@ -57,7 +57,7 @@ def search(query: str, k: int = 5):
     cleaned_relevant = max_relevant[0][0] 
     output = []
 
-    ranking_fusion = Rrf(cleaned_relevant, format_result)
+    ranking_fusion = Rrf_simple_search(cleaned_relevant, format_result)
     iterable = ranking_fusion.output_rff()
 
     with tqdm(total=len(iterable), desc="Getting Data") as pbar:
