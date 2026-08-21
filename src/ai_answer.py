@@ -34,7 +34,9 @@ class Ai_work:
 
         iterable = index_of_k["search_results"]
 
-        with tqdm(total=len(iterable), desc="Generating Answer with VLLM") as pbar:
+        with tqdm(
+            total=len(iterable), desc="Generating Answer with VLLM"
+        ) as pbar:
             for each_question in iterable:
                 for each_source in each_question["retrieved_sources"]:
                     sources_data = ""

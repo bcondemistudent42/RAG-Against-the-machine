@@ -69,7 +69,7 @@ class Indexer:
         while len(arr) > size:
             pice = arr[:size]
             arrs.append(pice)
-            arr   = arr[size:]
+            arr = arr[size:]
         arrs.append(arr)
         return arrs
 
@@ -88,9 +88,11 @@ class Indexer:
         docs_clean = Indexer.my_split(docs, 128)
         ids_clean = Indexer.my_split(ids, 128)
         chroma_client = chromadb.PersistentClient(path="chroma_cache")
-        collection = chroma_client.get_or_create_collection(name="my_collection")
+        collection = chroma_client.get_or_create_collection(
+            name="my_collection"
+        )
 
         for i in tqdm(range(len(docs_clean)), desc="Embedding Chroma DB"):
             collection.add(
-            documents=docs_clean[i], ids=ids_clean[i]
-        )
+                documents=docs_clean[i], ids=ids_clean[i]
+            )

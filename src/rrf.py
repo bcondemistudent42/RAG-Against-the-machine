@@ -32,13 +32,9 @@ class Rrf_simple_search(Rrf):
             else:
                 scores[elt] += Rrf.get_score(i + 1)
 
-        output = [
-            x[0] for x in sorted(scores.items(),
-            key=lambda x: x[1],
-            reverse=True)
-            ]
+        output = [x[0] for x in sorted(scores.items(), key=lambda x: x[1],
+                  reverse=True)]
         return list(OrderedDict.fromkeys(output))
-
 
 
 class Rrf_dataset_search(Rrf):
@@ -66,12 +62,8 @@ class Rrf_dataset_search(Rrf):
                     scores[self.chroma_rslt[j][i]] = Rrf.get_score(i + 1)
                 else:
                     scores[self.chroma_rslt[j][i]] += Rrf.get_score(i + 1)
-            output = [
-                x[0] for x in sorted(scores.items(),
-                key=lambda x: x[1],
-                reverse=True)
-                ]
+            output = [x[0] for x in sorted(scores.items(),
+                      key=lambda x: x[1], reverse=True)]
             output = list(OrderedDict.fromkeys(output))
             final.append(output[0:self.k])
         return final
-

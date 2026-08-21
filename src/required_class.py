@@ -54,6 +54,7 @@ class OneChunk(BaseModel):
 class ChunksLst(RootModel):
     root: dict[str, OneChunk]
 
+
 class RagQuestion(BaseModel):
     model_config = ConfigDict(extra='forbid')
     question_id: str

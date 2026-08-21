@@ -48,13 +48,15 @@ def search(query: str, k: int = 5):
     format_result = results["ids"][0]
 
     if k < 1 or k > 10:
-        raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
+        raise ValueError(
+            f"K have to be in the range 1 <= k <= 10\nActual k={k}"
+            )
     max_relevant = to_Bm25.find_k_relevant_one(query, k)
     with open("data/processed/my_chunk.json") as json_file:
         data_chunked = json.load(json_file)
         ChunksLst.model_validate(data_chunked)
 
-    cleaned_relevant = max_relevant[0][0] 
+    cleaned_relevant = max_relevant[0][0]
     output = []
 
     ranking_fusion = Rrf_simple_search(cleaned_relevant, format_result)
@@ -65,7 +67,9 @@ def search(query: str, k: int = 5):
             fp, s_idx, end_idx = Loader.data_from_relevant(
                 data_chunked, chunk_id
             )
-            output.append(f"File rank: {i + 1} File path: {fp} {s_idx} {end_idx}\n")
+            output.append(
+                f"File rank: {i + 1} File path: {fp} {s_idx} {end_idx}\n"
+            )
             pbar.update(1)
     print(f"\nTop k = {k} result:")
     print()
@@ -85,7 +89,9 @@ def search_dataset(
     """
 
     if k < 1 or k > 10:
-        raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
+        raise ValueError(
+            f"K have to be in the range 1 <= k <= 10\nActual k={k}"
+        )
 
     no_answer_q = Loader.load_questions(dataset_path)
     my_questions = Loader.validate_unanswered_q(no_answer_q)
@@ -126,7 +132,9 @@ def search_dataset(
 def answer(query: str, k: int = 5):
 
     if k < 1 or k > 10:
-        raise ValueError(f"K have to be in the range 1 <= k <= 10\nActual k={k}")
+        raise ValueError(
+            f"K have to be in the range 1 <= k <= 10\nActual k={k}"
+        )
 
     my_ai = Ai_work()
     max_relevant = to_Bm25.find_k_relevant_one(query, k)

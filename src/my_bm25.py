@@ -29,7 +29,9 @@ class to_Bm25:
     def find_k_relevant(questions: list[UnansweredQuestion], k: int):
         search_k_retreiver = bm25s.BM25.load("data/processed/bm25_index")
         output = []
-        for each_question in tqdm(questions, desc="Finding relevants with bm25"):
+        for each_question in tqdm(
+            questions, desc="Finding relevants with bm25"
+        ):
             query_tokens = bm25s.tokenize([each_question.question])
             docs, _ = search_k_retreiver.retrieve(query_tokens, k=k)
             output.append(docs.tolist())
