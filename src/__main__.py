@@ -11,7 +11,7 @@ from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
 from .required_class import ChunksLst, StudentSearchResults
-from .rrf import Rrf_simple_search
+from .rrf import Rrf_simple_search, Rrf_dataset_search
 from .to_json import JsonCreator
 
 
@@ -101,15 +101,18 @@ def search_dataset(
 
     max_relevant = to_Bm25.find_k_relevant(my_questions, k=k)
 
+    ranking_fusion = Rrf_dataset_search(max_relevant, results["ids"], k)
+    rff = ranking_fusion.output_rff()
+
     output = {}
     output["search_results"] = []
     output["k"] = k
 
-    iterable = max_relevant
+    iterable = rff
 
     with tqdm(total=len(iterable), desc="Building JSON") as pbar:
         for i, chunk_id in enumerate(iterable):
-            k_relevant = chunk_id[0]
+            k_relevant = chunk_id
             each_q = my_questions[i]
             json_dct = Loader.build_dict(each_q, k_relevant)
             output["search_results"].append(json_dct)
@@ -118,7 +121,6 @@ def search_dataset(
     JsonCreator.write_any_json(save_directory, output)
     print()
     print(f"Saved results at {save_directory}")
-    print()
 
 
 def answer(query: str, k: int = 5):
@@ -131,8 +133,6 @@ def answer(query: str, k: int = 5):
     answer = my_ai.get_one_answer(query, max_relevant)
     print()
     print(f"Model Answer: {answer}")
-    print()
-    # improve output
 
 
 def answer_dataset(
@@ -183,39 +183,36 @@ def main():
         }
     )
 
-# to implement the rff ranking with chomadb
-
 # to do the recallok stuff to see later
 # to do the evaluate stuff dont know how it works yet
-# to try improve perf with some np array
 
 if __name__ == "__main__":
-    # try:
+    try:
         main()
-    # except json.JSONDecodeError as e:
-    #     print("\n===============")
-    #     print("[ERROR]")
-    #     print(f"JSON DECODE ERROR OCURED :\n{e}")
-    #     print("=================\n")
-    # except FileNotFoundError as e:
-    #     print("\n===============")
-    #     print("[ERROR]")
-    #     print("A required file or folder is missing")
-    #     print(f"Missing File or Folder: {e.filename}")
-    #     print("Perhaps you forgot to index ?")
-    #     print("=================\n")
-    # except ValidationError as e:
-    #     print("\n===============")
-    #     print("[PYDANTIC VALIDATION ERROR] :")
-    #     print("Hint from Pydantic")
-    #     print(f"{e.errors()[0]['msg']}")
-    #     print(f"{e.errors()[0]['type']}")
-    #     print(f"{e.errors()[0]['loc']}")
-    #     print("=================\n")
-    # except ValueError as e:
-    #     print("\n===============")
-    #     print("[ERROR]")
-    #     print(f"A given value is missing or incorrect: {e}")
-    #     print("=================\n")
-    # except BaseException as e:
-    #     print(f"An error occured: {e}")
+    except json.JSONDecodeError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print(f"JSON DECODE ERROR OCURED :\n{e}")
+        print("=================\n")
+    except FileNotFoundError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print("A required file or folder is missing")
+        print(f"Missing File or Folder: {e.filename}")
+        print("Perhaps you forgot to index ?")
+        print("=================\n")
+    except ValidationError as e:
+        print("\n===============")
+        print("[PYDANTIC VALIDATION ERROR] :")
+        print("Hint from Pydantic")
+        print(f"{e.errors()[0]['msg']}")
+        print(f"{e.errors()[0]['type']}")
+        print(f"{e.errors()[0]['loc']}")
+        print("=================\n")
+    except ValueError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print(f"A given value is missing or incorrect: {e}")
+        print("=================\n")
+    except BaseException as e:
+        print(f"An error occured: {e}")
