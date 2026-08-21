@@ -50,7 +50,7 @@ class Ai_work:
                     question=each_question["question"]
                 )
                 pbar.update(1)
-            output.append(result.answer)
+                output.append(result.answer)
         return output
 
     def get_one_answer(self, question: str, index_of_k):

@@ -98,11 +98,11 @@ class Loader:
         return (output)
 
     @staticmethod
-    def build_dict_answer(question, sources, answer):
+    def build_dict_answer(question, question_id, sources, answer):
 
         output = {}
-        output["question_id"] = question.question_id
-        output["question"] = question.question
+        output["question_id"] = question_id
+        output["question"] = question
         output["retrieved_sources"] = sources
         output["answer"] = answer
         return output

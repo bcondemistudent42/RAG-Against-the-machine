@@ -149,21 +149,18 @@ def answer_dataset(
     save_directory: str = "data/output/search_results_and_answer",
 ):
 
-    # path_of_questions = (
-    #     "data/datasets/UnansweredQuestions/dataset_docs_public.json"
-    # )
-    # no_answer_q = Loader.load_questions(path_of_questions)
-    
-    
-    # extract questions form studsent search_results
-    # questions = Loader.validate_unanswered_q(no_answer_q)
-
+    questions = []
+    questions_ids = []
     my_ai = Ai_work()
 
     with open(student_search_results_path) as json_file:
         sources = json.load(json_file)
         StudentSearchResults.model_validate(sources)
+    for question in sources["search_results"]:
+        questions.append(question["question"])
+        questions_ids.append(question["question_id"])
     answers = my_ai.get_answers(sources)
+    print(answers)
 
     output = {}
     output["search_results"] = []
@@ -172,6 +169,7 @@ def answer_dataset(
     for i, each_question in enumerate(questions):
         little_dct = Loader.build_dict_answer(
             each_question,
+            questions_ids[i],
             sources["search_results"][i]["retrieved_sources"],
             answers[i],
         )
