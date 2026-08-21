@@ -4,7 +4,7 @@
       "question_id": "189c8b8a-e59c-4fca-92ad-c02df42cbe40",
       "question": "What activation formats does the fused batched MoE layer return in vLLM?",
       "answer": "The fused batched MoE layer returns a tuple of two `mk.FusedMoEActivationFormat.BatchedExperts` values from its `activation_formats` property.",
-      "sources": [
+      " ": [
         {
           "file_path": "data/raw/vllm-0.10.1/vllm/model_executor/layers/fused_moe/fused_batched_moe.py",
           "first_character_index": 28416,

@@ -149,11 +149,14 @@ def answer_dataset(
     save_directory: str = "data/output/search_results_and_answer",
 ):
 
-    path_of_questions = (
-        "data/datasets/UnansweredQuestions/dataset_docs_public.json"
-    )
-    no_answer_q = Loader.load_questions(path_of_questions)
-    questions = Loader.validate_unanswered_q(no_answer_q)
+    # path_of_questions = (
+    #     "data/datasets/UnansweredQuestions/dataset_docs_public.json"
+    # )
+    # no_answer_q = Loader.load_questions(path_of_questions)
+    
+    
+    # extract questions form studsent search_results
+    # questions = Loader.validate_unanswered_q(no_answer_q)
 
     my_ai = Ai_work()
 
@@ -192,35 +195,35 @@ def main():
     )
 
 if __name__ == "__main__":
-    try:
+    # try:
         main()
-    except json.JSONDecodeError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print(f"JSON DECODE ERROR OCURED :\n{e}")
-        print("=================\n")
-    except FileNotFoundError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print("A required file or folder is missing")
-        print(f"Missing File or Folder: {e.filename}")
-        print("Perhaps you forgot to index ?")
-        print("=================\n")
-    except ValidationError as e:
-        print("\n===============")
-        print("[PYDANTIC VALIDATION ERROR] :")
-        print("Hint from Pydantic")
-        print(f"{e.errors()[0]['msg']}")
-        print(f"{e.errors()[0]['type']}")
-        print(f"{e.errors()[0]['loc']}")
-        print("=================\n")
-    except ValueError as e:
-        print("\n===============")
-        print("[ERROR]")
-        print(f"A given value is missing or incorrect: {e}")
-        print("=================\n")
-    except BaseException as e:
-        print(f"An error occured: {e}")
+    # except json.JSONDecodeError as e:
+    #     print("\n===============")
+    #     print("[ERROR]")
+    #     print(f"JSON DECODE ERROR OCURED :\n{e}")
+    #     print("=================\n")
+    # except FileNotFoundError as e:
+    #     print("\n===============")
+    #     print("[ERROR]")
+    #     print("A required file or folder is missing")
+    #     print(f"Missing File or Folder: {e.filename}")
+    #     print("Perhaps you forgot to index ?")
+    #     print("=================\n")
+    # except ValidationError as e:
+    #     print("\n===============")
+    #     print("[PYDANTIC VALIDATION ERROR] :")
+    #     print("Hint from Pydantic")
+    #     print(f"{e.errors()[0]['msg']}")
+    #     print(f"{e.errors()[0]['type']}")
+    #     print(f"{e.errors()[0]['loc']}")
+    #     print("=================\n")
+    # except ValueError as e:
+    #     print("\n===============")
+    #     print("[ERROR]")
+    #     print(f"A given value is missing or incorrect: {e}")
+    #     print("=================\n")
+    # except BaseException as e:
+    #     print(f"An unexpected error occured: {e}")
 
 # to do the recallok stuff to see later
 # to do the evaluate stuff dont know how it works yet
