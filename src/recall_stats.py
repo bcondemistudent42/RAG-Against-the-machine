@@ -36,7 +36,7 @@ class Recall:
                     end_idx_check = result_source[i]["retrieved_sources"][0]["last_character_index"]
                     if self.workout_overlap((first_correct, last_correct), (start_idx_check, end_idx_check)):
                         score += 1
-                    break
+                break
         # output = score / len(rag_source)
         # percentage = 10 * 100
         print(score)
@@ -47,8 +47,6 @@ class Recall:
         rag_q = self.answered_q["rag_questions"]
         rslt_q = self.result["search_results"]
 
-        print(l_search_result)
-        print(len(self.answered_q["rag_questions"]))
         if (l_search_result != len(self.answered_q["rag_questions"])):
             print("\n[Error]: SearchResult must have the same number of AnsweredQuestion\n")
             sys.exit(1)
