@@ -11,7 +11,7 @@ from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
 from .required_class import ChunksLst, StudentSearchResults
-from .rrf import Rrf_simple_search, Rrf_dataset_search
+from .rrf import Rrf_dataset_search, Rrf_simple_search
 from .to_json import JsonCreator
 
 
