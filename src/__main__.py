@@ -191,9 +191,6 @@ def main():
         }
     )
 
-# to do the recallok stuff to see later
-# to do the evaluate stuff dont know how it works yet
-
 if __name__ == "__main__":
     try:
         main()
@@ -224,3 +221,6 @@ if __name__ == "__main__":
         print("=================\n")
     except BaseException as e:
         print(f"An error occured: {e}")
+
+# to do the recallok stuff to see later
+# to do the evaluate stuff dont know how it works yet
