@@ -10,6 +10,7 @@ from .chunker import Chunker
 from .indexing import Indexer
 from .loader import Loader
 from .my_bm25 import to_Bm25
+from .recall_stats import Recall
 from .required_class import ChunksLst, StudentSearchResults
 from .rrf import Rrf_dataset_search, Rrf_simple_search
 from .to_json import JsonCreator
@@ -181,6 +182,17 @@ def answer_dataset(
     print(f"\nResult were saved at '{save_directory}'\n")
 
 
+def evaluate_student(
+    student_search_results_path: str
+    = "data/output/search_results/search_results.json",
+    dataset_path: str
+    = "data/datasets/AnsweredQuestions/dataset_docs_public.json"
+):
+    evaluate = Recall(student_search_results_path, dataset_path)
+    evaluate.check_answer()
+    evaluate.evaluate_all()
+
+
 def main():
     fire.Fire(
         {
@@ -189,39 +201,38 @@ def main():
             "search_dataset": search_dataset,
             "answer": answer,
             "answer_dataset": answer_dataset,
+            "evaluate_student": evaluate_student
         }
     )
 
-if __name__ == "__main__":
-    # try:
-        main()
-    # except json.JSONDecodeError as e:
-    #     print("\n===============")
-    #     print("[ERROR]")
-    #     print(f"JSON DECODE ERROR OCURED :\n{e}")
-    #     print("=================\n")
-    # except FileNotFoundError as e:
-    #     print("\n===============")
-    #     print("[ERROR]")
-    #     print("A required file or folder is missing")
-    #     print(f"Missing File or Folder: {e.filename}")
-    #     print("Perhaps you forgot to index ?")
-    #     print("=================\n")
-    # except ValidationError as e:
-    #     print("\n===============")
-    #     print("[PYDANTIC VALIDATION ERROR] :")
-    #     print("Hint from Pydantic")
-    #     print(f"{e.errors()[0]['msg']}")
-    #     print(f"{e.errors()[0]['type']}")
-    #     print(f"{e.errors()[0]['loc']}")
-    #     print("=================\n")
-    # except ValueError as e:
-    #     print("\n===============")
-    #     print("[ERROR]")
-    #     print(f"A given value is missing or incorrect: {e}")
-    #     print("=================\n")
-    # except BaseException as e:
-    #     print(f"An unexpected error occured: {e}")
 
-# to do the recallok stuff to see later
-# to do the evaluate stuff dont know how it works yet
+if __name__ == "__main__":
+    try:
+        main()
+    except json.JSONDecodeError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print(f"JSON DECODE ERROR OCURED :\n{e}")
+        print("=================\n")
+    except FileNotFoundError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print("A required file or folder is missing")
+        print(f"Missing File or Folder: {e.filename}")
+        print("Perhaps you forgot to index ?")
+        print("=================\n")
+    except ValidationError as e:
+        print("\n===============")
+        print("[PYDANTIC VALIDATION ERROR] :")
+        print("Hint from Pydantic")
+        print(f"{e.errors()[0]['msg']}")
+        print(f"{e.errors()[0]['type']}")
+        print(f"{e.errors()[0]['loc']}")
+        print("=================\n")
+    except ValueError as e:
+        print("\n===============")
+        print("[ERROR]")
+        print(f"A given value is missing or incorrect: {e}")
+        print("=================\n")
+    except BaseException as e:
+        print(f"An unexpected error occured: {e}")
