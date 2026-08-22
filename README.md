@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by rpetit.*
+*This project has been created as part of the 42 curriculum by bcondemi.*
 
 # Retrieval-Augmented Generation (RAG) - Against the Machine
 
