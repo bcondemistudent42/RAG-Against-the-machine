@@ -6,6 +6,15 @@ MYPY_FLAGS = --warn-return-any --warn-unused-ignores --ignore-missing-imports --
 install:
 	uv sync
 
+preparation:
+	mkdir data/output/search_results_and_answers
+	mkdir data/output/search_results
+	mkdir data/processed
+	mkdir data/raw
+	unzip vllm-0.10.1.zip
+	mv vllm-0.10.1 data/raw
+
+
 run:
 	@$(UV_PY) -m src $(ARGS)
 
@@ -28,4 +37,4 @@ lint-strict:
 	$(UV_PY) flake8 $(SRCS_DIR)
 	$(UV_PY) mypy $(SRCS_DIR) --strict
 
-.PHONY: install run debug clean fclean lint lint-strict install-dataset
+.PHONY: install run debug clean fclean lint lint-strict
