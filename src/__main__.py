@@ -110,6 +110,9 @@ def search_dataset(
             f"K have to be in the range 1 <= k <= 10\nActual k={k}"
         )
 
+    with open('data/processed/my_chunk.json') as _:
+        pass
+
     no_answer_q = Loader.load_questions(dataset_path)
     my_questions = Loader.validate_unanswered_q(no_answer_q)
 
