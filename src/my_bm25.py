@@ -1,24 +1,25 @@
 import bm25s
 from tqdm import tqdm
 
+from .chunker import ChunkedData
 from .my_enum import FileType
 from .required_class import UnansweredQuestion
 
 
 class to_Bm25:
-    def __init__(self, chunked_data):
+    def __init__(self, chunked_data: ChunkedData) -> None:
         """Initialize the BM25 helper."""
         self.chunked_data = chunked_data
-        self.corpus = []
+        self.corpus: list[str] = []
 
-    def convert_to_corpus(self):
+    def convert_to_corpus(self) -> None:
         """Flatten chunked data into a BM25 corpus."""
         for data_type in FileType:
             for each_file in getattr(self.chunked_data, data_type):
                 for each_chunk in each_file:
                     self.corpus.append(each_chunk)
 
-    def tokenize_and_index(self):
+    def tokenize_and_index(self) -> None:
         """Tokenize the corpus and save a BM25 index."""
         if len(self.corpus) == 0:
             raise ValueError("No data was given")
@@ -29,7 +30,10 @@ class to_Bm25:
         self.retriever = retriever
 
     @staticmethod
-    def find_k_relevant(questions: list[UnansweredQuestion], k: int):
+    def find_k_relevant(
+        questions: list[UnansweredQuestion],
+        k: int,
+    ) -> list[list[list[int]]]:
         """Find the top-k relevant chunks for each question.
 
         Args:
@@ -40,7 +44,7 @@ class to_Bm25:
             A list of retrieved chunk identifiers per question.
         """
         search_k_retreiver = bm25s.BM25.load("data/processed/bm25_index")
-        output = []
+        output: list[list[list[int]]] = []
         for each_question in tqdm(
             questions, desc="Finding relevants with bm25"
         ):
@@ -50,7 +54,7 @@ class to_Bm25:
         return (output)
 
     @staticmethod
-    def find_k_relevant_one(question: UnansweredQuestion, k: int):
+    def find_k_relevant_one(question: str, k: int) -> list[list[list[int]]]:
         """Find the top-k relevant chunks for one question.
 
         Args:
@@ -61,7 +65,7 @@ class to_Bm25:
             A list containing the retrieved chunk identifiers.
         """
         search_k_retreiver = bm25s.BM25.load("data/processed/bm25_index")
-        output = []
+        output: list[list[list[int]]] = []
         query_tokens = bm25s.tokenize([question])
         docs, _ = search_k_retreiver.retrieve(query_tokens, k=k)
         output.append(docs.tolist())

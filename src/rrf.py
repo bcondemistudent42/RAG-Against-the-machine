@@ -5,7 +5,7 @@ from collections import OrderedDict
 class Rrf(ABC):
 
     @staticmethod
-    def get_score(rank: int):
+    def get_score(rank: int) -> float:
         """Return the reciprocal-rank fusion score for one position.
 
         Args:
@@ -18,13 +18,17 @@ class Rrf(ABC):
         return 1.0 / (ranking_constant + rank)
 
     @abstractmethod
-    def output_rff(self):
+    def output_rff(self) -> list[int] | list[list[int]]:
         """Return the fused ranking output."""
         ...
 
 
 class Rrf_simple_search(Rrf):
-    def __init__(self, bm25_results: list[int], embedding_results: list[int]):
+    def __init__(
+        self,
+        bm25_results: list[int],
+        embedding_results: list[str]
+    ) -> None:
         """Initialize reciprocal-rank fusion for a single query.
 
         Args:
@@ -34,7 +38,7 @@ class Rrf_simple_search(Rrf):
         self.bm_rslt = bm25_results
         self.chroma_rslt = [int(x) for x in embedding_results]
 
-    def output_rff(self):
+    def output_rff(self) -> list[int]:
         """Fuse BM25 and embedding rankings for one query.
 
         Returns:
@@ -58,7 +62,12 @@ class Rrf_simple_search(Rrf):
 
 
 class Rrf_dataset_search(Rrf):
-    def __init__(self, bm25_results, embedding_results, k):
+    def __init__(
+        self,
+        bm25_results: list[list[list[int]]],
+        embedding_results: list[list[str]],
+        k: int,
+    ) -> None:
         """Initialize reciprocal-rank fusion for a dataset.
 
         Args:
@@ -67,7 +76,7 @@ class Rrf_dataset_search(Rrf):
             k: Number of fused results to keep per question.
         """
         self.bm_rslt = [x[0] for x in bm25_results]
-        self.chroma_rslt = []
+        self.chroma_rslt: list[list[int]] = []
         for each_list in embedding_results:
             little_lst = []
             for each_number in each_list:
@@ -75,7 +84,7 @@ class Rrf_dataset_search(Rrf):
             self.chroma_rslt.append(little_lst)
         self.k = k
 
-    def output_rff(self):
+    def output_rff(self) -> list[list[int]]:
         """Fuse rankings for all questions in the dataset.
 
         Returns:

@@ -9,13 +9,13 @@ from .my_enum import FileType
 
 @dataclass
 class ChunkedData:
-    py: list[Document]
-    md: list[Document]
-    txt: list[Document]
+    py: list[list[str]]
+    md: list[list[str]]
+    txt: list[list[str]]
 
 
 class Chunker:
-    def __init__(self, raw_data: Raw_data, chunk_size: int):
+    def __init__(self, raw_data: Raw_data, chunk_size: int) -> None:
         """Initialize the chunker.
 
         Args:
@@ -25,7 +25,11 @@ class Chunker:
         self.raw_data = raw_data
         self.chunk_size = chunk_size
 
-    def splitter(self, typed_data: Document, doc_type: FileType):
+    def splitter(
+        self,
+        typed_data: list[Document],
+        doc_type: FileType,
+    ) -> tuple[list[list[str]], list[str]]:
         """Split documents of one type into chunks.
 
         Args:
@@ -57,14 +61,14 @@ class Chunker:
         metadata_srcs = [x.metadata["source"] for x in typed_data]
         return (chunk, metadata_srcs)
 
-    def chunk_all(self) -> ChunkedData:
+    def chunk_all(self) -> tuple[ChunkedData, dict[str, list[list[str]]]]:
         """Chunk all loaded documents by file type.
 
         Returns:
             Chunked documents and their grouped metadata sources.
         """
-        output = {}
-        metadata_srcs = {}
+        output: dict[str, list[list[str]]] = {}
+        metadata_srcs: dict[str, list[list[str]]] = {}
         for each_type in FileType:
             each_type = str(each_type)
             output[each_type], temp_meta = self.splitter(

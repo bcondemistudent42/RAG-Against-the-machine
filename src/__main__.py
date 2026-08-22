@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import chromadb
 import fire
@@ -16,7 +17,7 @@ from .rrf import Rrf_dataset_search, Rrf_simple_search
 from .to_json import JsonCreator
 
 
-def index(chunk_size: int = 2000):
+def index(chunk_size: int = 2000) -> None:
     """Build the full retrieval index from the raw source data.
 
     Args:
@@ -42,7 +43,7 @@ def index(chunk_size: int = 2000):
     Indexer.embedding()
 
 
-def search(query: str, k: int = 5):
+def search(query: str, k: int = 5) -> None:
 
     """Search the indexed data for a single query.
 
@@ -70,7 +71,7 @@ def search(query: str, k: int = 5):
         ChunksLst.model_validate(data_chunked)
 
     cleaned_relevant = max_relevant[0][0]
-    output = []
+    output: list[str] = []
 
     ranking_fusion = Rrf_simple_search(cleaned_relevant, format_result)
     iterable = ranking_fusion.output_rff()
@@ -95,7 +96,7 @@ def search_dataset(
     = "data/datasets/UnansweredQuestions/dataset_docs_public.json",
     k: int = 10,
     save_directory: str = "data/output/search_results/",
-):
+) -> None:
     """Run search over a dataset and write the search results to JSON.
 
     Args:
@@ -126,7 +127,7 @@ def search_dataset(
     ranking_fusion = Rrf_dataset_search(max_relevant, results["ids"], k)
     rff = ranking_fusion.output_rff()
 
-    output = {}
+    output: dict[str, Any] = {}
     output["search_results"] = []
     output["k"] = k
 
@@ -145,7 +146,7 @@ def search_dataset(
     print(f"Saved results at {save_directory}")
 
 
-def answer(query: str, k: int = 5):
+def answer(query: str, k: int = 5) -> None:
     """Generate and print an answer for a single query.
 
     Args:
@@ -169,7 +170,7 @@ def answer_dataset(
     student_search_results_path: str
     = "data/output/search_results/search_results.json",
     save_directory: str = "data/output/search_results_and_answer",
-):
+) -> None:
     """Generate answers for a saved search-results dataset.
 
     Args:
@@ -190,7 +191,7 @@ def answer_dataset(
     answers = my_ai.get_answers(sources)
     print(answers)
 
-    output = {}
+    output: dict[str, Any] = {}
     output["search_results"] = []
     output["k"] = sources["k"]
 
@@ -214,7 +215,7 @@ def evaluate_student(
     = "data/output/search_results/search_results.json",
     dataset_path: str
     = "data/datasets/AnsweredQuestions/dataset_docs_public.json"
-):
+) -> None:
     """Evaluate a student's search results against the answered dataset.
 
     Args:
@@ -226,7 +227,7 @@ def evaluate_student(
     evaluate.evaluate_all()
 
 
-def main():
+def main() -> None:
     """Expose the command-line interface."""
     fire.Fire(
         {

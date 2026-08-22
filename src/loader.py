@@ -16,7 +16,7 @@ class Raw_data:
 
 
 class Loader:
-    def __init__(self, folder_name: str):
+    def __init__(self, folder_name: str) -> None:
         """Initialize the loader for a source directory.
 
         Args:
@@ -99,7 +99,10 @@ class Loader:
         return output
 
     @staticmethod
-    def data_from_relevant(data_chunked, chunk_id):
+    def data_from_relevant(
+        data_chunked: dict[str, dict[str, Any]],
+        chunk_id: str | int,
+    ) -> tuple[str, int, int]:
         """Return file and character bounds for a retrieved chunk.
 
         Args:
@@ -116,7 +119,10 @@ class Loader:
         return (file_path, start_idx, end_idx)
 
     @staticmethod
-    def build_dict(question, k_relevant):
+    def build_dict(
+        question: UnansweredQuestion,
+        k_relevant: list[int],
+    ) -> dict[str, Any]:
         """Build a search-result dictionary for one question.
 
         Args:
@@ -144,7 +150,12 @@ class Loader:
         return (output)
 
     @staticmethod
-    def build_dict_answer(question, question_id, sources, answer):
+    def build_dict_answer(
+        question: str,
+        question_id: str,
+        sources: list[dict[str, Any]],
+        answer: str,
+    ) -> dict[str, Any]:
         """Build an answered-search-result dictionary.
 
         Args:
@@ -156,7 +167,7 @@ class Loader:
         Returns:
             A dictionary matching the answered-results schema.
         """
-        output = {}
+        output: dict[str, Any] = {}
         output["question_id"] = question_id
         output["question"] = question
         output["retrieved_sources"] = sources

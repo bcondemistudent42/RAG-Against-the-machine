@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import dspy
 from tqdm import tqdm
@@ -15,7 +16,7 @@ class AnswerBot(dspy.Signature):
 
 
 class Ai_work:
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the answer-generation pipeline."""
         with open('data/processed/my_chunk.json') as json_file:
             data_chunked = json.load(json_file)
@@ -27,7 +28,7 @@ class Ai_work:
         )
         dspy.configure(lm=self.lm)
 
-    def get_answers(self, index_of_k):
+    def get_answers(self, index_of_k: dict[str, Any]) -> list[str]:
         """Generate answers for a batch of search results.
 
         Args:
@@ -60,7 +61,11 @@ class Ai_work:
                 output.append(result.answer)
         return output
 
-    def get_one_answer(self, question: str, index_of_k):
+    def get_one_answer(
+        self,
+        question: str,
+        index_of_k: list[list[list[int]]],
+    ) -> str:
         """Generate one answer from the top retrieved chunk.
 
         Args:
@@ -75,4 +80,4 @@ class Ai_work:
             data=self.data_chunked[str(index_of_k[0][0][0])]["content"],
             question=question
         )
-        return (result.answer)
+        return str(result.answer)

@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from .chunker import ChunkedData
 from .indexing import OrganisedMetadata
@@ -6,18 +7,22 @@ from .my_enum import FileType
 
 
 class JsonCreator:
-    def __init__(self, chunks: ChunkedData, metadata: OrganisedMetadata):
+    def __init__(
+        self,
+        chunks: ChunkedData,
+        metadata: OrganisedMetadata
+    ) -> None:
         """Initialize the JSON exporter.
 
         Args:
             chunks: Chunked content grouped by file type.
             metadata: Per-chunk metadata aligned with the content.
         """
-        self.big_dict = {}
+        self.big_dict: dict[int, dict[str, Any]] = {}
         self.chunks = chunks
         self.metadata = metadata
 
-    def _convertor(self, data_type: FileType, chunk_idx: int):
+    def _convertor(self, data_type: FileType, chunk_idx: int) -> None:
         """Convert one file type into the internal JSON structure.
 
         Args:
@@ -42,7 +47,7 @@ class JsonCreator:
                 self.big_dict[chunk_idx] = temp
                 chunk_idx += 1
 
-    def convert_all(self):
+    def convert_all(self) -> dict[int, dict[str, Any]]:
         """Convert every chunk into the export dictionary.
 
         Returns:
@@ -55,7 +60,7 @@ class JsonCreator:
         return self.big_dict
 
 # to secure if processed folder not created
-    def write_chunk(self):
+    def write_chunk(self) -> None:
         """Write the processed chunk mapping to disk."""
         with open("data/processed/my_chunk.json", "w") as f:
             f.write(json.dumps(self.big_dict, indent=4))
@@ -63,9 +68,9 @@ class JsonCreator:
     @staticmethod
     def write_any_json(
         dir_to_write: str,
-        the_dict: dict,
-        the_name="search_results.json"
-    ):
+        the_dict: dict[str, Any],
+        the_name: str = "search_results.json",
+    ) -> None:
         """Write a dictionary to a JSON file.
 
         Args:

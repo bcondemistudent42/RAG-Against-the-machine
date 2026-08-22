@@ -17,13 +17,17 @@ class MinimalSource(BaseModel):
 
 @dataclass
 class OrganisedMetadata:
-    py: list[MinimalSource]
-    md: list[MinimalSource]
-    txt: list[MinimalSource]
+    py: list[list[MinimalSource]]
+    md: list[list[MinimalSource]]
+    txt: list[list[MinimalSource]]
 
 
 class Indexer:
-    def __init__(self, chunked_data: ChunkedData, all_sources: dict[str: str]):
+    def __init__(
+        self,
+        chunked_data: ChunkedData,
+        all_sources: dict[str, list[list[str]]]
+    ):
         """Initialize the indexer.
 
         Args:
@@ -33,13 +37,13 @@ class Indexer:
         self.chunked_data = chunked_data
         self.all_sources = all_sources
 
-    def make_all_metadata_index(self):
+    def make_all_metadata_index(self) -> OrganisedMetadata:
         """Build metadata indices for all chunked file types.
 
         Returns:
             An `OrganisedMetadata` container with per-chunk metadata.
         """
-        output = {}
+        output: dict[str, list[list[MinimalSource]]] = {}
         for data_type in FileType:
             data_type = str(data_type)
             output[data_type] = []
@@ -53,8 +57,8 @@ class Indexer:
     @staticmethod
     def _make_metadata_index(
         typed_data: list[list[str]],
-        metadata_typed: list[str]
-    ) -> list[MinimalSource]:
+        metadata_typed: list[list[str]],
+    ) -> list[list[MinimalSource]]:
         """Create metadata entries for a single file type.
 
         Args:
@@ -65,7 +69,7 @@ class Indexer:
             Nested metadata objects aligned with the chunk contents.
         """
         file = -1
-        output = []
+        output: list[list[MinimalSource]] = []
         for chunk in typed_data:
             file += 1
             prev_len = 0
@@ -84,7 +88,7 @@ class Indexer:
         return output
 
     @staticmethod
-    def my_split(arr, size):
+    def my_split(arr: list[str], size: int) -> list[list[str]]:
         """Split a list into fixed-size batches.
 
         Args:
@@ -94,7 +98,7 @@ class Indexer:
         Returns:
             A list of list batches.
         """
-        arrs = []
+        arrs: list[list[str]] = []
         while len(arr) > size:
             pice = arr[:size]
             arrs.append(pice)
@@ -103,7 +107,7 @@ class Indexer:
         return arrs
 
     @staticmethod
-    def embedding():
+    def embedding() -> None:
         """Embed chunk contents into the persistent Chroma collection."""
         docs = []
         ids = []

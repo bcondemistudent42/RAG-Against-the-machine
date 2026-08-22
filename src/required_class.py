@@ -38,8 +38,9 @@ class StudentSearchResults(BaseModel):
     k: int
 
 
-class StudentSearchResultsAndAnswer(StudentSearchResults):
+class StudentSearchResultsAndAnswer(BaseModel):
     search_results: list[MinimalAnswer]
+    k: int
 
 
 class OneChunk(BaseModel):

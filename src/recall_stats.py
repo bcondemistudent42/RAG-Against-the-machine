@@ -4,7 +4,7 @@ import sys
 
 class Recall:
 
-    def __init__(self, search_rslt: str, dataset_path: str):
+    def __init__(self, search_rslt: str, dataset_path: str) -> None:
         """Load search results and reference answers for evaluation.
 
         Args:
@@ -16,7 +16,11 @@ class Recall:
         with open(dataset_path) as json_file:
             self.answered_q = json.load(json_file)
 
-    def workout_overlap(self, correct: tuple, to_test: tuple):
+    def workout_overlap(
+        self,
+        correct: tuple[int, int],
+        to_test: tuple[int, int],
+    ) -> bool:
         """Check whether two character ranges overlap enough to count.
 
         Args:
@@ -35,7 +39,7 @@ class Recall:
 
         return True if union > 0 and intersection / union >= 0.05 else False
 
-    def evaluate(self, k: int):
+    def evaluate(self, k: int) -> float:
         """Compute recall at k for the stored datasets.
 
         Args:
@@ -72,7 +76,7 @@ class Recall:
                         break
         return score / 100
 
-    def check_answer(self):
+    def check_answer(self) -> None:
         """Validate that search results match the reference dataset."""
 
         l_search_result = len(self.result["search_results"])
@@ -100,7 +104,7 @@ class Recall:
                 )
                 sys.exit(1)
 
-    def evaluate_all(self):
+    def evaluate_all(self) -> None:
         """Print recall metrics for the standard cutoffs."""
         recall = [1, 3, 5, 10]
 
