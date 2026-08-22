@@ -24,10 +24,21 @@ class OrganisedMetadata:
 
 class Indexer:
     def __init__(self, chunked_data: ChunkedData, all_sources: dict[str: str]):
+        """Initialize the indexer.
+
+        Args:
+            chunked_data: Chunked documents grouped by file type.
+            all_sources: Metadata source paths for each chunk group.
+        """
         self.chunked_data = chunked_data
         self.all_sources = all_sources
 
     def make_all_metadata_index(self):
+        """Build metadata indices for all chunked file types.
+
+        Returns:
+            An `OrganisedMetadata` container with per-chunk metadata.
+        """
         output = {}
         for data_type in FileType:
             data_type = str(data_type)
@@ -44,6 +55,15 @@ class Indexer:
         typed_data: list[list[str]],
         metadata_typed: list[str]
     ) -> list[MinimalSource]:
+        """Create metadata entries for a single file type.
+
+        Args:
+            typed_data: Nested chunk contents for one file type.
+            metadata_typed: Source file paths associated with the chunks.
+
+        Returns:
+            Nested metadata objects aligned with the chunk contents.
+        """
         file = -1
         output = []
         for chunk in typed_data:
@@ -65,6 +85,15 @@ class Indexer:
 
     @staticmethod
     def my_split(arr, size):
+        """Split a list into fixed-size batches.
+
+        Args:
+            arr: List to split.
+            size: Maximum batch size.
+
+        Returns:
+            A list of list batches.
+        """
         arrs = []
         while len(arr) > size:
             pice = arr[:size]
@@ -75,6 +104,7 @@ class Indexer:
 
     @staticmethod
     def embedding():
+        """Embed chunk contents into the persistent Chroma collection."""
         docs = []
         ids = []
 

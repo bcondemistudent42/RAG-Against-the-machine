@@ -17,9 +17,22 @@ class Raw_data:
 
 class Loader:
     def __init__(self, folder_name: str):
+        """Initialize the loader for a source directory.
+
+        Args:
+            folder_name: Root folder containing the raw documents.
+        """
         self.path_ton_index = Path(folder_name)
 
     def _load_extension(self, ext: str) -> list[Document]:
+        """Load all documents with a given file extension.
+
+        Args:
+            ext: File extension to search for.
+
+        Returns:
+            A list of loaded LangChain documents.
+        """
         docs = []
         for file_path in self.path_ton_index.rglob(f"*.{ext}"):
             try:
@@ -35,6 +48,11 @@ class Loader:
         return docs
 
     def load_all(self) -> Raw_data:
+        """Load all supported file types from the source directory.
+
+        Returns:
+            A `Raw_data` container with the loaded documents.
+        """
         txt = self._load_extension("txt")
         md = self._load_extension("md")
         py = self._load_extension("py")
@@ -42,6 +60,14 @@ class Loader:
 
     @staticmethod
     def load_questions(dataset_path: str) -> list[dict[str, Any]]:
+        """Load unanswered questions from a dataset file.
+
+        Args:
+            dataset_path: Path to the JSON dataset.
+
+        Returns:
+            The raw list of question dictionaries.
+        """
         error = "Invalid dataset format: questions must be a non empty list"
         path = Path(dataset_path)
         raw = path.read_text()
@@ -56,6 +82,14 @@ class Loader:
     def validate_unanswered_q(
         questions: list[dict[str, Any]]
     ) -> list[UnansweredQuestion]:
+        """Validate raw question dictionaries and convert them to models.
+
+        Args:
+            questions: Raw question dictionaries.
+
+        Returns:
+            A list of `UnansweredQuestion` instances.
+        """
         output = []
         for each_question in questions:
             temp = UnansweredQuestion(
@@ -66,8 +100,14 @@ class Loader:
 
     @staticmethod
     def data_from_relevant(data_chunked, chunk_id):
-        """
-        Extract data properly
+        """Return file and character bounds for a retrieved chunk.
+
+        Args:
+            data_chunked: Chunk metadata mapping.
+            chunk_id: Identifier of the chunk to resolve.
+
+        Returns:
+            A tuple containing the file path and character indices.
         """
         chunk_id = str(chunk_id)
         file_path = data_chunked[chunk_id]["file_path"]
@@ -77,8 +117,14 @@ class Loader:
 
     @staticmethod
     def build_dict(question, k_relevant):
-        """
-        build a dict that will be append to search_results
+        """Build a search-result dictionary for one question.
+
+        Args:
+            question: Question model with an id and text.
+            k_relevant: Retrieved chunk identifiers.
+
+        Returns:
+            A dictionary matching the expected search-results schema.
         """
         with open('data/processed/my_chunk.json') as json_file:
             data_chunked = json.load(json_file)
@@ -99,7 +145,17 @@ class Loader:
 
     @staticmethod
     def build_dict_answer(question, question_id, sources, answer):
+        """Build an answered-search-result dictionary.
 
+        Args:
+            question: Question text.
+            question_id: Question identifier.
+            sources: Retrieved sources used to answer the question.
+            answer: Generated answer text.
+
+        Returns:
+            A dictionary matching the answered-results schema.
+        """
         output = {}
         output["question_id"] = question_id
         output["question"] = question

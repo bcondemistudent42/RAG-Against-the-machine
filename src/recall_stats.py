@@ -5,12 +5,27 @@ import sys
 class Recall:
 
     def __init__(self, search_rslt: str, dataset_path: str):
+        """Load search results and reference answers for evaluation.
+
+        Args:
+            search_rslt: Path to the student's search-results JSON file.
+            dataset_path: Path to the answered reference dataset.
+        """
         with open(search_rslt) as json_file:
             self.result = json.load(json_file)
         with open(dataset_path) as json_file:
             self.answered_q = json.load(json_file)
 
     def workout_overlap(self, correct: tuple, to_test: tuple):
+        """Check whether two character ranges overlap enough to count.
+
+        Args:
+            correct: Reference character range.
+            to_test: Predicted character range.
+
+        Returns:
+            True when the overlap ratio is at least 5 percent, otherwise False.
+        """
         if correct[0] >= correct[1] or to_test[0] >= to_test[1]:
             return False
 
@@ -21,6 +36,14 @@ class Recall:
         return True if union > 0 and intersection / union >= 0.05 else False
 
     def evaluate(self, k: int):
+        """Compute recall at k for the stored datasets.
+
+        Args:
+            k: Number of retrieved sources to consider.
+
+        Returns:
+            The recall score normalized over 100 questions.
+        """
         score = 0
         rag_source = self.answered_q["rag_questions"]
         result_source = self.result["search_results"]
@@ -50,6 +73,7 @@ class Recall:
         return score / 100
 
     def check_answer(self):
+        """Validate that search results match the reference dataset."""
 
         l_search_result = len(self.result["search_results"])
         rag_q = self.answered_q["rag_questions"]
@@ -77,6 +101,7 @@ class Recall:
                 sys.exit(1)
 
     def evaluate_all(self):
+        """Print recall metrics for the standard cutoffs."""
         recall = [1, 3, 5, 10]
 
         print("Student data is valid: True")

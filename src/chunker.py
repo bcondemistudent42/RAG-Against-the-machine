@@ -16,10 +16,25 @@ class ChunkedData:
 
 class Chunker:
     def __init__(self, raw_data: Raw_data, chunk_size: int):
+        """Initialize the chunker.
+
+        Args:
+            raw_data: Loaded raw documents grouped by file type.
+            chunk_size: Maximum size of each generated chunk.
+        """
         self.raw_data = raw_data
         self.chunk_size = chunk_size
 
     def splitter(self, typed_data: Document, doc_type: FileType):
+        """Split documents of one type into chunks.
+
+        Args:
+            typed_data: Documents to split.
+            doc_type: File type controlling the splitter configuration.
+
+        Returns:
+            A tuple of chunk lists and their source paths.
+        """
         if doc_type == FileType.PY:
             multi_splitter = RecursiveCharacterTextSplitter.from_language(
                 chunk_size=self.chunk_size,
@@ -43,6 +58,11 @@ class Chunker:
         return (chunk, metadata_srcs)
 
     def chunk_all(self) -> ChunkedData:
+        """Chunk all loaded documents by file type.
+
+        Returns:
+            Chunked documents and their grouped metadata sources.
+        """
         output = {}
         metadata_srcs = {}
         for each_type in FileType:

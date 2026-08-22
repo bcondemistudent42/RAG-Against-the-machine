@@ -8,9 +8,7 @@ from tqdm import tqdm
 # elle traite ensuite tout les questions une par une et stock
 # le resultat dans un json similaire a asnwered questions
 class AnswerBot(dspy.Signature):
-    """
-    Answer the question with the given data.
-    """
+    """Answer a question using the provided context data."""
     question: str = dspy.InputField(desc="Question to answer")
     data: str = dspy.InputField(desc="Data linked to the question.")
     answer: str = dspy.OutputField()
@@ -18,6 +16,7 @@ class AnswerBot(dspy.Signature):
 
 class Ai_work:
     def __init__(self):
+        """Initialize the answer-generation pipeline."""
         with open('data/processed/my_chunk.json') as json_file:
             data_chunked = json.load(json_file)
         self.data_chunked = data_chunked
@@ -29,6 +28,14 @@ class Ai_work:
         dspy.configure(lm=self.lm)
 
     def get_answers(self, index_of_k):
+        """Generate answers for a batch of search results.
+
+        Args:
+            index_of_k: Search-result payload containing retrieved sources.
+
+        Returns:
+            A list of generated answers in question order.
+        """
         output = []
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
 
@@ -54,6 +61,15 @@ class Ai_work:
         return output
 
     def get_one_answer(self, question: str, index_of_k):
+        """Generate one answer from the top retrieved chunk.
+
+        Args:
+            question: Question to answer.
+            index_of_k: Retrieved chunk ranking data.
+
+        Returns:
+            The generated answer text.
+        """
         reasoning_bot = dspy.ChainOfThought(AnswerBot)
         result = reasoning_bot(
             data=self.data_chunked[str(index_of_k[0][0][0])]["content"],

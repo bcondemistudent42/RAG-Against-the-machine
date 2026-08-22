@@ -17,6 +17,11 @@ from .to_json import JsonCreator
 
 
 def index(chunk_size: int = 2000):
+    """Build the full retrieval index from the raw source data.
+
+    Args:
+        chunk_size: Maximum size of each chunk produced by the chunker.
+    """
     database = "data/raw"
     load = Loader(database)
     raw_data = load.load_all()
@@ -38,6 +43,13 @@ def index(chunk_size: int = 2000):
 
 
 def search(query: str, k: int = 5):
+
+    """Search the indexed data for a single query.
+
+    Args:
+        query: User query to search for.
+        k: Number of results to display.
+    """
 
     chroma_client = chromadb.PersistentClient(path="chroma_cache")
     collection = chroma_client.get_or_create_collection(name="my_collection")
@@ -76,7 +88,6 @@ def search(query: str, k: int = 5):
     print()
     for i in range(k):
         print(output[i])
-    # to upgrade the output to be better
 
 
 def search_dataset(
@@ -85,8 +96,12 @@ def search_dataset(
     k: int = 10,
     save_directory: str = "data/output/search_results/",
 ):
-    """
-    Run search over a whole dataset and write a StudentSearchResults JSON file.
+    """Run search over a dataset and write the search results to JSON.
+
+    Args:
+        dataset_path: Path to the unanswered-question dataset.
+        k: Number of retrieved sources to keep per question.
+        save_directory: Directory where the output JSON file is written.
     """
 
     if k < 1 or k > 10:
@@ -131,6 +146,12 @@ def search_dataset(
 
 
 def answer(query: str, k: int = 5):
+    """Generate and print an answer for a single query.
+
+    Args:
+        query: User question to answer.
+        k: Number of retrieved chunks used as context.
+    """
 
     if k < 1 or k > 10:
         raise ValueError(
@@ -149,6 +170,12 @@ def answer_dataset(
     = "data/output/search_results/search_results.json",
     save_directory: str = "data/output/search_results_and_answer",
 ):
+    """Generate answers for a saved search-results dataset.
+
+    Args:
+        student_search_results_path: Path to the search-results JSON file.
+        save_directory: Directory where the answered JSON file is written.
+    """
 
     questions = []
     questions_ids = []
@@ -188,12 +215,19 @@ def evaluate_student(
     dataset_path: str
     = "data/datasets/AnsweredQuestions/dataset_docs_public.json"
 ):
+    """Evaluate a student's search results against the answered dataset.
+
+    Args:
+        student_search_results_path: Path to the student's search results.
+        dataset_path: Path to the reference answered dataset.
+    """
     evaluate = Recall(student_search_results_path, dataset_path)
     evaluate.check_answer()
     evaluate.evaluate_all()
 
 
 def main():
+    """Expose the command-line interface."""
     fire.Fire(
         {
             "index": index,

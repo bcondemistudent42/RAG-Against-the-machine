@@ -7,11 +7,23 @@ from .my_enum import FileType
 
 class JsonCreator:
     def __init__(self, chunks: ChunkedData, metadata: OrganisedMetadata):
+        """Initialize the JSON exporter.
+
+        Args:
+            chunks: Chunked content grouped by file type.
+            metadata: Per-chunk metadata aligned with the content.
+        """
         self.big_dict = {}
         self.chunks = chunks
         self.metadata = metadata
 
     def _convertor(self, data_type: FileType, chunk_idx: int):
+        """Convert one file type into the internal JSON structure.
+
+        Args:
+            data_type: File type being exported.
+            chunk_idx: Starting chunk identifier.
+        """
         for i in range(len(getattr(self.chunks, data_type))):
             for j in range(len(getattr(self.chunks, data_type)[i])):
                 temp = {
@@ -31,6 +43,11 @@ class JsonCreator:
                 chunk_idx += 1
 
     def convert_all(self):
+        """Convert every chunk into the export dictionary.
+
+        Returns:
+            The complete chunk mapping ready for serialization.
+        """
         chunk_idx = 0
         for data_type in FileType:
             self._convertor(data_type, chunk_idx)
@@ -39,6 +56,7 @@ class JsonCreator:
 
 # to secure if processed folder not created
     def write_chunk(self):
+        """Write the processed chunk mapping to disk."""
         with open("data/processed/my_chunk.json", "w") as f:
             f.write(json.dumps(self.big_dict, indent=4))
 
@@ -48,6 +66,16 @@ class JsonCreator:
         the_dict: dict,
         the_name="search_results.json"
     ):
+        """Write a dictionary to a JSON file.
+
+        Args:
+            dir_to_write: Output directory.
+            the_dict: Data to serialize.
+            the_name: Output filename.
+
+        Raises:
+            ValueError: If the file cannot be written.
+        """
         to_write = f"{dir_to_write}/{the_name}"
         # to see how to handle when folder not exist
         # to see with gemini
