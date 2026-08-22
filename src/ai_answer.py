@@ -5,9 +5,6 @@ import dspy
 from tqdm import tqdm
 
 
-# faire une autre classe qui recois une liste de question
-# elle traite ensuite tout les questions une par une et stock
-# le resultat dans un json similaire a asnwered questions
 class AnswerBot(dspy.Signature):
     """Answer a question using the provided context data."""
     question: str = dspy.InputField(desc="Question to answer")

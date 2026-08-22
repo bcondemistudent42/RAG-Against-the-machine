@@ -59,7 +59,6 @@ class JsonCreator:
             chunk_idx = len(self.big_dict.keys())
         return self.big_dict
 
-# to secure if processed folder not created
     def write_chunk(self) -> None:
         """Write the processed chunk mapping to disk."""
         with open("data/processed/my_chunk.json", "w") as f:
@@ -82,8 +81,6 @@ class JsonCreator:
             ValueError: If the file cannot be written.
         """
         to_write = f"{dir_to_write}/{the_name}"
-        # to see how to handle when folder not exist
-        # to see with gemini
         try:
             with open(to_write, "w") as f:
                 f.write(json.dumps(the_dict, indent=4))

@@ -42,19 +42,19 @@ class Chunker:
         if doc_type == FileType.PY:
             multi_splitter = RecursiveCharacterTextSplitter.from_language(
                 chunk_size=self.chunk_size,
-                chunk_overlap=0,  # setting it to 0 to see later
+                chunk_overlap=(self.chunk_size * 5) / 100,
                 language=Language.PYTHON
             )
         elif doc_type == FileType.MD:
             multi_splitter = RecursiveCharacterTextSplitter.from_language(
                 chunk_size=self.chunk_size,
-                chunk_overlap=0,  # setting it to 0 to see later
+                chunk_overlap=(self.chunk_size * 5) / 100,
                 language=Language.MARKDOWN
             )
         else:
             multi_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=self.chunk_size,
-                chunk_overlap=0  # setting it to 0 to see later
+                chunk_overlap=(self.chunk_size * 5) / 100
             )
 
         chunk = [multi_splitter.split_text(x.page_content) for x in typed_data]
