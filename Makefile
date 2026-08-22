@@ -18,7 +18,7 @@ clean:
 	rm -rf __pycache__ .mypy_cache .pytest_cache
 
 fclean: clean
-	rm -rf .venv .chroma_cache
+	rm -rf .venv chroma_cache
 
 lint:
 	$(UV_PY) flake8 $(SRCS_DIR)
