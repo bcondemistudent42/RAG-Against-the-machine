@@ -74,7 +74,7 @@ class Recall:
                     ):
                         score += 1
                         break
-        return score / 100
+        return score / len(rag_source)
 
     def check_answer(self) -> None:
         """Validate that search results match the reference dataset."""
@@ -115,4 +115,7 @@ class Recall:
 
         for each_recall in recall:
             score = self.evaluate(each_recall)
-            print(f"Recall@{each_recall}: {score} ({score * 100}%)")
+            v = round(score, 3)
+            print(
+                f"Recall@{each_recall}: {v} ({round(score * 100, 1)}%)"
+            )
