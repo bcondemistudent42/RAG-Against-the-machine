@@ -19,7 +19,7 @@ class Recall:
 
         return True if union > 0 and intersection / union >= 0.05 else False
 
-    def evaluate(self):
+    def evaluate(self, k: int):
         score = 0
         rag_source = self.answered_q["rag_questions"]
         result_source = self.result["search_results"]
@@ -30,15 +30,15 @@ class Recall:
             last_correct = rag_source[i]["sources"][0]["last_character_index"]
 
             file_path_answer = result_source[i]["retrieved_sources"] #list de source trouve par search_dataset
-            for each_file in file_path_answer:
+            for j, each_file in enumerate(file_path_answer):
+                if j >= k:
+                    break
                 if each_file["file_path"] == file_path_correct:
-                    start_idx_check = result_source[i]["retrieved_sources"][0]["first_character_index"]
-                    end_idx_check = result_source[i]["retrieved_sources"][0]["last_character_index"]
+                    start_idx_check = each_file["first_character_index"]
+                    end_idx_check = each_file["last_character_index"]
                     if self.workout_overlap((first_correct, last_correct), (start_idx_check, end_idx_check)):
                         score += 1
-                break
-        # output = score / len(rag_source)
-        # percentage = 10 * 100
+                        break
         print(score)
 
     def check_answer(self):
@@ -59,6 +59,6 @@ class Recall:
 
 test = Recall(
     "data/output/search_results/search_results.json",
-    "data/datasets/AnsweredQuestions/dataset_code_public.json")
+    "data/datasets/AnsweredQuestions/dataset_docs_public.json")
 test.check_answer()
-test.evaluate()
+test.evaluate(10)
